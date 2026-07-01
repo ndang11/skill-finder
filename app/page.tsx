@@ -1,24 +1,28 @@
-import { useState } from "react";
-import heroImg from "./assets/hero.png";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "./assets/vite.svg";
-import "./App.css";
+"use client";
 
-function App() {
+import { useState } from "react";
+
+export default function Home() {
 	const [count, setCount] = useState(0);
 
 	return (
 		<>
 			<section id="center">
 				<div className="hero">
-					<img src={heroImg} className="base" width="170" height="179" alt="" />
-					<img src={reactLogo} className="framework" alt="React logo" />
-					<img src={viteLogo} className="vite" alt="Vite logo" />
+					<img
+						src="/assets/hero.png"
+						className="base"
+						width="170"
+						height="179"
+						alt=""
+					/>
+					<img src="/assets/react.svg" className="framework" alt="React logo" />
+					<img src="/assets/vite.svg" className="vite" alt="Vite logo" />
 				</div>
 				<div>
 					<h1>Get started</h1>
 					<p>
-						Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
+						Edit <code>app/page.tsx</code> and save to test <code>HMR</code>
 					</p>
 				</div>
 				<button
@@ -42,13 +46,13 @@ function App() {
 					<ul>
 						<li>
 							<a href="https://vite.dev/" target="_blank" rel="noopener">
-								<img className="logo" src={viteLogo} alt="" />
+								<img className="logo" src="/assets/vite.svg" alt="" />
 								Explore Vite
 							</a>
 						</li>
 						<li>
 							<a href="https://react.dev/" target="_blank" rel="noopener">
-								<img className="button-icon" src={reactLogo} alt="" />
+								<img className="button-icon" src="/assets/react.svg" alt="" />
 								Learn React
 							</a>
 						</li>
@@ -126,5 +130,3 @@ function App() {
 		</>
 	);
 }
-
-export default App;
