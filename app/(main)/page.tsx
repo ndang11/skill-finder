@@ -1,3 +1,10 @@
+// app/(main)/page.tsx
+import { Hero } from "@/components/home/Hero";
+
 export default function HomePage() {
-	return <div>Home</div>;
+	return (
+		<main className="min-h-screen bg-white">
+			<Hero />
+		</main>
+	);
 }
