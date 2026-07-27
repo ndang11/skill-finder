@@ -109,9 +109,21 @@ export default function PostCard({
 			<div className="flex items-center justify-between px-5 pt-5 pb-3">
 				<div className="flex items-center gap-3 min-w-0">
 					{/* Avatar */}
-					<div className="flex-shrink-0 w-11 h-11 rounded-full bg-gradient-to-br from-primary-400 to-green-600 flex items-center justify-center text-white text-sm font-black shadow-sm">
-						{avatarInitials}
-					</div>
+					{post.authorAvatar ? (
+						<div className="flex-shrink-0 w-11 h-11 rounded-full overflow-hidden border border-gray-200 shadow-sm">
+							{/* eslint-disable-next-line @next/next/no-img-element */}
+							{/* biome-ignore lint/performance/noImgElement: dynamic author avatar */}
+							<img
+								src={post.authorAvatar}
+								alt={post.authorName}
+								className="w-full h-full object-cover"
+							/>
+						</div>
+					) : (
+						<div className="flex-shrink-0 w-11 h-11 rounded-full bg-gradient-to-br from-primary-400 to-green-600 flex items-center justify-center text-white text-sm font-black shadow-sm">
+							{avatarInitials}
+						</div>
+					)}
 					{/* Author Info */}
 					<div className="min-w-0">
 						<div className="flex items-center gap-1.5 flex-wrap">

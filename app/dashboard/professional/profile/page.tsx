@@ -1,6 +1,7 @@
 "use client";
 
 import type { User } from "@supabase/supabase-js";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
@@ -58,9 +59,21 @@ export default function ProfilePage() {
 			{/* Profile Header */}
 			<Card className="p-6 sm:p-8">
 				<div className="flex flex-col sm:flex-row items-center gap-5">
-					<span className="flex h-20 w-20 items-center justify-center rounded-full bg-primary-100 text-primary-700 font-black text-3xl">
-						{initial}
-					</span>
+					{user.user_metadata?.avatar_url || profile?.avatarUrl ? (
+						<div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-full border-2 border-primary-100 shadow-sm">
+							<Image
+								src={user.user_metadata?.avatar_url || profile?.avatarUrl || ""}
+								alt={displayName}
+								fill
+								className="object-cover"
+								unoptimized
+							/>
+						</div>
+					) : (
+						<span className="flex h-20 w-20 flex-shrink-0 items-center justify-center rounded-full bg-primary-100 text-primary-700 font-black text-3xl">
+							{initial}
+						</span>
+					)}
 					<div className="text-center sm:text-left flex-1 min-w-0">
 						<h1 className="text-2xl sm:text-3xl font-black text-gray-900 truncate">
 							{displayName}

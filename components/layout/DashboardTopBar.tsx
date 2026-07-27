@@ -531,11 +531,23 @@ export default function DashboardTopBar() {
 							className="flex items-center gap-2 rounded-full border border-gray-200 bg-white pl-1 pr-3 py-1 hover:border-primary-300 hover:shadow-sm transition-all"
 							aria-label="Open profile"
 						>
-							<span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-100 text-primary-700 font-bold text-sm">
-								{user?.user_metadata?.fullname?.charAt(0).toUpperCase() ||
-									user?.email?.charAt(0).toUpperCase() ||
-									"U"}
-							</span>
+							{user?.user_metadata?.avatar_url ? (
+								<div className="relative h-8 w-8 flex-shrink-0 overflow-hidden rounded-full border border-gray-200">
+									{/* eslint-disable-next-line @next/next/no-img-element */}
+									{/* biome-ignore lint/performance/noImgElement: dynamic user avatar */}
+									<img
+										src={user.user_metadata.avatar_url}
+										alt="Avatar"
+										className="h-full w-full object-cover"
+									/>
+								</div>
+							) : (
+								<span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-100 text-primary-700 font-bold text-sm">
+									{user?.user_metadata?.fullname?.charAt(0).toUpperCase() ||
+										user?.email?.charAt(0).toUpperCase() ||
+										"U"}
+								</span>
+							)}
 							<span className="hidden sm:block text-xs font-semibold text-gray-700 max-w-[100px] truncate">
 								{user?.user_metadata?.fullname?.split(" ")[0] || "Profile"}
 							</span>
