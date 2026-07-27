@@ -195,13 +195,13 @@ export default function PostCard({
 
 			{/* Post Image */}
 			{post.imageUrl && (
-				<div className="overflow-hidden mx-5 mb-3 rounded-xl border border-gray-100">
+				<div className="overflow-hidden w-full my-3 bg-gray-50/50 border-y border-gray-100 flex items-center justify-center">
 					{/* eslint-disable-next-line @next/next/no-img-element */}
 					{/* biome-ignore lint/performance/noImgElement: Next.js <Image> requires pre-configuring arbitrary external domains for dynamic user uploads */}
 					<img
 						src={post.imageUrl}
 						alt={`Work showcase by ${post.authorName}`}
-						className="w-full h-56 object-cover hover:scale-105 transition-transform duration-500"
+						className="w-full max-h-[550px] object-cover transition-transform duration-300 hover:scale-[1.01]"
 						loading="lazy"
 					/>
 				</div>
