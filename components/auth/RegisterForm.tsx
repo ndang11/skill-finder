@@ -8,6 +8,7 @@ import * as React from "react";
 import * as Yup from "yup";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { apiRequest } from "@/services/api";
 import { supabase } from "@/utils/supabase/client";
 
 const schema = Yup.object({
@@ -127,6 +128,23 @@ export const RegisterForm = () => {
 
 				if (error) throw error;
 
+				// Sync the new user profile into the local backend DB so the
+				// posts foreign-key constraint (authorId → users.id) is satisfied.
+				if (data?.session && data?.user) {
+					try {
+						await apiRequest("/users/sync", {
+							method: "POST",
+							body: JSON.stringify({
+								id: data.user.id,
+								fullname: values.fullname,
+								email: data.user.email,
+							}),
+						});
+					} catch {
+						// Non-blocking — continue even if sync fails
+					}
+				}
+
 				resetForm();
 
 				// If session is returned immediately (email confirmation is disabled),
@@ -150,7 +168,20 @@ export const RegisterForm = () => {
 		<form onSubmit={formik.handleSubmit} className="space-y-5">
 			{serverError && (
 				<p className="text-xs text-center font-semibold text-red-500 animate-in fade-in-50">
-					{serverError}
+					{serverError.includes("already registered") ? (
+						<>
+							User already registered. Please{" "}
+							<Link
+								href="/login"
+								className="underline font-bold text-primary-600 hover:text-primary-700"
+							>
+								log in here
+							</Link>
+							.
+						</>
+					) : (
+						serverError
+					)}
 				</p>
 			)}
 			<div className="text-center pb-2">

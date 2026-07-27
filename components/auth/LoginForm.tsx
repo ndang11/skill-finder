@@ -3,15 +3,18 @@
 
 import { useFormik } from "formik";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import * as Yup from "yup";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { apiRequest } from "@/services/api";
+import { supabase } from "@/utils/supabase/client";
 
 const LoginSchema = Yup.object().shape({
-	username: Yup.string()
-		.min(3, "Username must be at least 3 characters")
-		.required("Username is required to access your account"),
+	email: Yup.string()
+		.email("Invalid email address")
+		.required("Email is required to access your account"),
 	password: Yup.string()
 		.min(6, "Password must be at least 6 characters")
 		.required("Password is required"),
@@ -55,19 +58,49 @@ const EyeIcon = ({ show }: { show: boolean }) =>
 	);
 
 export const LoginForm = () => {
+	const router = useRouter();
 	const [showPassword, setShowPassword] = useState(false);
+	const [serverError, setServerError] = useState<string | null>(null);
+
 	const formik = useFormik({
 		initialValues: {
-			username: "",
+			email: "",
 			password: "",
 		},
 		validationSchema: LoginSchema,
 		onSubmit: async (values, { setSubmitting }) => {
 			try {
-				// Form submits safely to your NestJS backend here via endpoints
-				console.log("Logging in payload: ", values);
+				setServerError(null);
+				const { data, error } = await supabase.auth.signInWithPassword({
+					email: values.email.trim(),
+					password: values.password,
+				});
+
+				if (error) throw error;
+
+				if (data?.session) {
+					// Upsert user into local DB on every login. This ensures
+					// the foreign-key constraint for posts is always satisfied.
+					try {
+						await apiRequest("/users/sync", {
+							method: "POST",
+							body: JSON.stringify({
+								id: data.user.id,
+								fullname: data.user.user_metadata?.fullname || data.user.email,
+								email: data.user.email,
+							}),
+						});
+					} catch {
+						// Non-blocking
+					}
+					const role = data.user?.user_metadata?.role || "customer";
+					router.push(`/dashboard/${role}`);
+					router.refresh();
+				}
 			} catch (error) {
-				console.error(error);
+				setServerError(
+					error instanceof Error ? error.message : "Invalid login credentials",
+				);
 			} finally {
 				setSubmitting(false);
 			}
@@ -76,15 +109,21 @@ export const LoginForm = () => {
 
 	return (
 		<form onSubmit={formik.handleSubmit} className="space-y-5">
+			{serverError && (
+				<p className="text-xs text-center font-semibold text-red-500 animate-in fade-in-50">
+					{serverError}
+				</p>
+			)}
+
 			<Input
-				label="Username"
-				name="username"
-				type="text"
-				placeholder="Enter your unique username"
+				label="Email Address"
+				name="email"
+				type="email"
+				placeholder="Enter your email address"
 				onChange={formik.handleChange}
 				onBlur={formik.handleBlur}
-				value={formik.values.username}
-				error={formik.touched.username ? formik.errors.username : undefined}
+				value={formik.values.email}
+				error={formik.touched.email ? formik.errors.email : undefined}
 			/>
 
 			<Input

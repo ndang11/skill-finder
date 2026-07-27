@@ -48,6 +48,7 @@ export function usePosts() {
 		async (
 			postId: string,
 			content: string,
+			authorId: string,
 			authorName: string,
 			authorRole: "customer" | "professional" | "admin",
 		) => {
@@ -55,6 +56,7 @@ export function usePosts() {
 				const newComment = await postService.addComment(postId, {
 					postId,
 					content,
+					authorId,
 					authorName,
 					authorRole,
 				});
