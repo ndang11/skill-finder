@@ -10,6 +10,11 @@ export const professionalService = {
 			},
 		);
 	},
+	getProfessionals: async (): Promise<Professional[]> => {
+		return apiRequest<Professional[]>("/professionals", {
+			method: "GET",
+		});
+	},
 	updateProfile: async (data: Partial<Professional>): Promise<Professional> => {
 		return apiRequest<Professional>("/professionals/profile", {
 			method: "PATCH",

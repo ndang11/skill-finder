@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
+import WriteReviewModal from "@/components/reviews/WriteReviewModal";
 
 // Types
 export interface Skill {
@@ -65,6 +66,7 @@ export default function ProfessionalProfile({
 		"overview",
 	);
 	const [isSaved, setIsSaved] = useState(false);
+	const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
 
 	// Fallback to sample data if no props provided
 	const user = customUser || {
@@ -203,6 +205,15 @@ export default function ProfessionalProfile({
 							className="p-2.5 rounded-xl border border-gray-200 bg-white text-gray-600 hover:bg-gray-50 transition-colors"
 						>
 							<Share2 className="w-5 h-5" />
+						</button>
+
+						<button
+							type="button"
+							onClick={() => setIsReviewModalOpen(true)}
+							className="flex items-center gap-2 px-4 py-2.5 bg-amber-50 hover:bg-amber-100 text-amber-700 font-medium text-sm rounded-xl transition-all border border-amber-200"
+						>
+							<Star className="w-4 h-4 fill-amber-500" />
+							Rate & Review
 						</button>
 
 						<button
@@ -469,6 +480,16 @@ export default function ProfessionalProfile({
 					</div>
 				</div>
 			</div>
+			{/* Write Review Modal */}
+			<WriteReviewModal
+				professionalId={"demo-professional-id"}
+				professionalName={user.fullName}
+				isOpen={isReviewModalOpen}
+				onClose={() => setIsReviewModalOpen(false)}
+				onReviewSubmitted={() => {
+					setIsReviewModalOpen(false);
+				}}
+			/>
 		</div>
 	);
 }
