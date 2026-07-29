@@ -22,6 +22,8 @@ const navItemsPerRole: Record<
 	],
 	customer: [
 		{ href: "/dashboard/customer", label: "Overview" },
+		{ href: "/search", label: "Find Professional" },
+		{ href: "/dashboard/customer/profile", label: "Profile" },
 		{ href: "/dashboard/customer/bookmarks", label: "Bookmarks" },
 		{ href: "/dashboard/customer/reviews", label: "My Reviews" },
 		{ href: "/dashboard/customer/settings", label: "Settings" },
@@ -60,8 +62,16 @@ export default function DashboardSidebar() {
 		router.push("/login");
 	};
 
-	const isActive = (href: string) =>
-		pathname === href || pathname.startsWith(`${href}/`);
+	const isActive = (href: string) => {
+		if (
+			href === "/dashboard/customer" ||
+			href === "/dashboard/professional" ||
+			href === "/dashboard/admin"
+		) {
+			return pathname === href;
+		}
+		return pathname === href || pathname.startsWith(`${href}/`);
+	};
 
 	return (
 		<aside className="fixed inset-y-0 left-0 z-30 hidden w-64 border-r border-gray-200 bg-white md:flex">

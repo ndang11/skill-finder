@@ -1,7 +1,8 @@
-export default function ProfessionalProfilePage({
+export default async function ProfessionalProfilePage({
 	params,
 }: {
-	params: { id: string };
+	params: Promise<{ id: string }>;
 }) {
-	return <div>Professional: {params.id}</div>;
+	const { id } = await params;
+	return <div>Professional: {id}</div>;
 }

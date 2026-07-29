@@ -1,6 +1,7 @@
 // components/feed/PostCard.tsx
 "use client";
 
+import Link from "next/link";
 import * as React from "react";
 import type { Post } from "@/types/post.types";
 import { cn } from "@/utils/cn";
@@ -195,7 +196,10 @@ export default function PostCard({
 
 			{/* Post Image */}
 			{post.imageUrl && (
-				<div className="overflow-hidden w-full my-3 bg-gray-50/50 border-y border-gray-100 flex items-center justify-center">
+				<Link
+					href={`/feed/${post.id}`}
+					className="block overflow-hidden w-full my-3 bg-gray-50/50 border-y border-gray-100 cursor-pointer"
+				>
 					{/* eslint-disable-next-line @next/next/no-img-element */}
 					{/* biome-ignore lint/performance/noImgElement: Next.js <Image> requires pre-configuring arbitrary external domains for dynamic user uploads */}
 					<img
@@ -204,7 +208,7 @@ export default function PostCard({
 						className="w-full max-h-[550px] object-cover transition-transform duration-300 hover:scale-[1.01]"
 						loading="lazy"
 					/>
-				</div>
+				</Link>
 			)}
 
 			{/* Action Bar */}

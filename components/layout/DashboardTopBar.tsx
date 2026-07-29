@@ -98,12 +98,25 @@ export default function DashboardTopBar() {
 	const results = React.useMemo<SearchResult[]>(() => {
 		if (!debouncedQuery.trim()) return [];
 		const q = debouncedQuery.toLowerCase();
-		return STATIC_RESULTS.filter(
-			(r) =>
-				r.label.toLowerCase().includes(q) ||
-				(r.sublabel ?? "").toLowerCase().includes(q),
-		).slice(0, 7);
-	}, [debouncedQuery]);
+		return STATIC_RESULTS.map((r) => {
+			if (r.label === "My Profile") {
+				return {
+					...r,
+					href:
+						user?.user_metadata?.role === "professional"
+							? "/dashboard/professional/profile"
+							: "/dashboard/customer/profile",
+				};
+			}
+			return r;
+		})
+			.filter(
+				(r) =>
+					r.label.toLowerCase().includes(q) ||
+					(r.sublabel ?? "").toLowerCase().includes(q),
+			)
+			.slice(0, 7);
+	}, [debouncedQuery, user?.user_metadata?.role]);
 
 	const showDropdown =
 		isFocused &&
@@ -527,7 +540,11 @@ export default function DashboardTopBar() {
 						</a>
 
 						<Link
-							href="/dashboard/professional/profile"
+							href={
+								user?.user_metadata?.role === "professional"
+									? "/dashboard/professional/profile"
+									: "/dashboard/customer/profile"
+							}
 							className="flex items-center gap-2 rounded-full border border-gray-200 bg-white pl-1 pr-3 py-1 hover:border-primary-300 hover:shadow-sm transition-all"
 							aria-label="Open profile"
 						>
@@ -553,7 +570,6 @@ export default function DashboardTopBar() {
 							</span>
 						</Link>
 					</div>
-					;
 				</div>
 			</div>
 		</header>
