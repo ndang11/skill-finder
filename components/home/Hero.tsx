@@ -1,77 +1,79 @@
 // components/home/Hero.tsx
 "use client";
 
+import { Search, Shield, Star, Users } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 
 export const Hero = () => {
 	return (
-		<section
-			className="relative overflow-hidden pt-28 pb-20 lg:pt-36 lg:pb-28 bg-cover bg-center bg-no-repeat z-0"
-			style={{
-				backgroundImage: `linear-gradient(to right, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.85) 50%, rgba(0, 0, 0, 0.4) 100%), url('https://images.unsplash.com/photo-1687422808289-e721259c9eb4?w=1400&h=900&fit=crop&auto=format')`,
-			}}
-		>
-			{/* Additional Ambient Glow for Dark Background contrast */}
-			<div className="absolute top-0 left-1/4 -z-10 h-[400px] w-[400px] rounded-full bg-primary-500/10 blur-[120px]" />
-			<div className="absolute bottom-0 right-1/4 -z-10 h-[500px] w-[500px] rounded-full bg-yellow-500/10 blur-[150px]" />
+		<section className="relative overflow-hidden bg-gradient-to-br from-primary-50 via-white to-green-50/30">
+			{/* Background decorations */}
+			<div className="absolute inset-0 -z-10 overflow-hidden">
+				<div className="absolute -top-40 -right-40 h-80 w-80 rounded-full bg-primary-200/40 blur-[100px]" />
+				<div className="absolute top-40 -left-40 h-80 w-80 rounded-full bg-green-200/30 blur-[100px]" />
+				<div className="absolute bottom-0 right-1/4 h-60 w-60 rounded-full bg-primary-100/30 blur-[80px]" />
+			</div>
 
-			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+			<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-16 pb-20 lg:pt-24 lg:pb-28">
 				<div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
 					{/* Left Column: Headline and Action */}
 					<div className="lg:col-span-7 text-left space-y-6 lg:pr-6">
-						<span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 backdrop-blur-md px-3.5 py-1.5 text-xs sm:text-sm font-semibold text-primary-300 border border-white/20 hover:scale-[1.02] transition-transform cursor-default">
+						<span className="inline-flex items-center gap-1.5 rounded-full bg-primary-100 px-3.5 py-1.5 text-xs sm:text-sm font-bold text-primary-700 border border-primary-200">
 							🇨🇲 The #1 Artisan Directory in Cameroon
 						</span>
 
-						<h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-[1.1]">
+						<h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-gray-900 tracking-tight leading-[1.1]">
 							Find Trusted{" "}
-							<span className="text-primary-400 bg-gradient-to-r from-primary-400 to-green-400 bg-clip-text text-transparent">
+							<span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-500 to-green-600">
 								Professionals
 							</span>{" "}
 							Anywhere in Cameroon.
 						</h1>
 
-						<p className="text-base sm:text-lg text-gray-300 max-w-xl leading-relaxed">
+						<p className="text-base sm:text-lg text-gray-600 max-w-xl leading-relaxed">
 							Connect directly with verified mechanics, electricians, plumbers,
 							and artisans near you. Skip the stress, check ratings, and hire
 							instantly via WhatsApp.
 						</p>
 
-						{/* Direct Get Started CTA Button */}
-						<div className="pt-2 max-w-xs">
-							<Link href="/register">
-								<Button className="w-full text-base font-bold bg-primary-500 hover:bg-primary-600 text-white rounded-xl py-3.5 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 transition-all">
-									Get Started
+						{/* CTA Buttons */}
+						<div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 pt-2">
+							<Link href="/search">
+								<Button className="w-full sm:w-auto text-base font-bold h-12 px-8 shadow-lg shadow-primary-500/20">
+									<Search className="h-5 w-5 mr-2" />
+									Find Professionals
+								</Button>
+							</Link>
+							<Link href="/categories">
+								<Button
+									variant="outline"
+									className="w-full sm:w-auto text-base font-bold h-12 px-8"
+								>
+									Browse Categories
 								</Button>
 							</Link>
 						</div>
 
-						{/* Platform Stats Row */}
-						<div className="grid grid-cols-3 gap-4 pt-8 max-w-md border-t border-white/10">
-							<div>
-								<p className="text-2xl sm:text-3xl font-black text-white">
-									1,200+
-								</p>
-								<p className="text-xs sm:text-sm text-gray-400 font-medium">
-									Artisans Registered
-								</p>
+						{/* Trust badges */}
+						<div className="flex flex-wrap items-center gap-6 pt-4">
+							<div className="flex items-center gap-2 text-sm text-gray-600">
+								<div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-100 text-primary-600">
+									<Shield className="h-4 w-4" />
+								</div>
+								<span className="font-semibold">Verified Pros</span>
 							</div>
-							<div>
-								<p className="text-2xl sm:text-3xl font-black text-white">
-									15+
-								</p>
-								<p className="text-xs sm:text-sm text-gray-400 font-medium">
-									Artisan Categories
-								</p>
+							<div className="flex items-center gap-2 text-sm text-gray-600">
+								<div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-100 text-amber-600">
+									<Star className="h-4 w-4" />
+								</div>
+								<span className="font-semibold">Real Reviews</span>
 							</div>
-							<div>
-								<p className="text-2xl sm:text-3xl font-black text-white">
-									100%
-								</p>
-								<p className="text-xs sm:text-sm text-gray-400 font-medium">
-									Verified Profiles
-								</p>
+							<div className="flex items-center gap-2 text-sm text-gray-600">
+								<div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-100 text-blue-600">
+									<Users className="h-4 w-4" />
+								</div>
+								<span className="font-semibold">1,200+ Users</span>
 							</div>
 						</div>
 					</div>
@@ -79,17 +81,17 @@ export const Hero = () => {
 					{/* Right Column: Premium Showcase Profile Card */}
 					<div className="lg:col-span-5 relative flex justify-center lg:justify-end">
 						{/* Background Accent ring */}
-						<div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 sm:w-96 h-72 sm:h-96 rounded-full border-2 border-dashed border-white/10 -z-10 animate-spin-[200s] linear infinite" />
+						<div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 sm:w-96 h-72 sm:h-96 rounded-full border-2 border-dashed border-primary-200 -z-10" />
 
 						{/* Main Showcase Profile Card */}
-						<div className="w-full max-w-[360px] bg-white rounded-3xl p-6 shadow-2xl shadow-black/40 border border-gray-100 relative hover:-translate-y-1 transition-transform duration-300">
+						<div className="w-full max-w-[360px] bg-white rounded-3xl p-6 shadow-xl shadow-gray-200/60 border border-gray-100 hover:-translate-y-1 transition-transform duration-300">
 							{/* Card Header: Avatar & Badges */}
 							<div className="flex items-center gap-4">
 								<div className="relative">
 									<div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary-400 to-green-600 flex items-center justify-center text-white text-xl font-bold shadow-md shadow-primary-500/20">
 										FB
 									</div>
-									<span className="absolute bottom-0 right-0 block h-4 w-4 rounded-full bg-green-500 border-2 border-white ring-0" />
+									<span className="absolute bottom-0 right-0 block h-4 w-4 rounded-full bg-green-500 border-2 border-white" />
 								</div>
 
 								<div>
@@ -116,7 +118,7 @@ export const Hero = () => {
 											</svg>
 										</span>
 									</div>
-									<p className="text-xs sm:text-sm font-semibold text-primary-600">
+									<p className="text-sm font-semibold text-primary-600">
 										Solar Installer & Electrician
 									</p>
 									<p className="text-xs text-gray-400 font-medium">
@@ -127,19 +129,17 @@ export const Hero = () => {
 
 							{/* Work Details & Experience */}
 							<div className="mt-5 space-y-3.5">
-								<div className="flex items-center justify-between text-xs sm:text-sm border-b border-gray-50 pb-2">
+								<div className="flex items-center justify-between text-sm border-b border-gray-50 pb-2">
 									<span className="text-gray-400 font-medium">Experience</span>
 									<span className="text-gray-900 font-bold">6+ Years</span>
 								</div>
-								<div className="flex items-center justify-between text-xs sm:text-sm border-b border-gray-50 pb-2">
-									<span className="text-gray-400 font-medium">
-										Services Offered
-									</span>
+								<div className="flex items-center justify-between text-sm border-b border-gray-50 pb-2">
+									<span className="text-gray-400 font-medium">Services</span>
 									<span className="text-gray-900 font-bold">
 										Inverters, AC Repair
 									</span>
 								</div>
-								<div className="flex items-center justify-between text-xs sm:text-sm border-b border-gray-50 pb-2">
+								<div className="flex items-center justify-between text-sm border-b border-gray-50 pb-2">
 									<span className="text-gray-400 font-medium">
 										Response Rate
 									</span>
@@ -172,7 +172,7 @@ export const Hero = () => {
 								</span>
 							</div>
 
-							{/* WhatsApp Button Wrapper */}
+							{/* WhatsApp Button */}
 							<div className="mt-5">
 								<Link
 									href="https://wa.me/237600000000?text=Hello%20Fon%20Bello,%20I%20found%20your%20profile%20on%20Skill%20Finder%20and%20would%20like%20to%20inquire%20about%20your%20services."
@@ -193,22 +193,22 @@ export const Hero = () => {
 							</div>
 						</div>
 
-						{/* Absolute Floating Badges for Visual Flair */}
-						<div className="absolute top-10 -left-6 bg-white shadow-xl shadow-gray-200/50 px-4 py-2.5 rounded-2xl flex items-center gap-2 border border-gray-50/80 animate-bounce-[8s] infinite">
-							<span className="text-xl">🏆</span>
+						{/* Floating Badges */}
+						<div className="absolute top-10 -left-4 sm:-left-6 bg-white shadow-xl shadow-gray-200/50 px-3 py-2 sm:px-4 sm:py-2.5 rounded-2xl flex items-center gap-2 border border-gray-50/80">
+							<span className="text-lg sm:text-xl">🏆</span>
 							<div>
 								<p className="text-xs font-bold text-gray-900">Top Rated</p>
-								<p className="text-[10px] text-gray-400 font-semibold">
+								<p className="text-[10px] text-gray-400 font-semibold hidden sm:block">
 									Artisan of the Month
 								</p>
 							</div>
 						</div>
 
-						<div className="absolute bottom-12 -right-4 bg-white shadow-xl shadow-gray-200/50 px-4 py-2.5 rounded-2xl flex items-center gap-2 border border-gray-50/80">
-							<span className="text-xl">🛡️</span>
+						<div className="absolute bottom-12 -right-2 sm:-right-4 bg-white shadow-xl shadow-gray-200/50 px-3 py-2 sm:px-4 sm:py-2.5 rounded-2xl flex items-center gap-2 border border-gray-50/80">
+							<span className="text-lg sm:text-xl">🛡️</span>
 							<div>
 								<p className="text-xs font-bold text-gray-900">100% Secure</p>
-								<p className="text-[10px] text-gray-400 font-semibold">
+								<p className="text-[10px] text-gray-400 font-semibold hidden sm:block">
 									Verified Trade Certs
 								</p>
 							</div>
