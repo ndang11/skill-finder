@@ -1,14 +1,6 @@
 // components/layout/Footer.tsx
 
-import {
-	Facebook,
-	Instagram,
-	Mail,
-	MapPin,
-	Phone,
-	Search,
-	Twitter,
-} from "lucide-react";
+import { Mail, MapPin, Phone } from "lucide-react";
 import Link from "next/link";
 
 export default function Footer() {
@@ -30,32 +22,6 @@ export default function Footer() {
 							The #1 artisan directory in Cameroon. Connect with trusted
 							professionals for every job, big or small.
 						</p>
-						<div className="flex items-center gap-3">
-							<a
-								href="https://facebook.com"
-								target="_blank"
-								rel="noopener noreferrer"
-								className="h-9 w-9 flex items-center justify-center rounded-xl bg-gray-800 text-gray-400 hover:bg-primary-500 hover:text-white transition-all"
-							>
-								<Facebook className="h-4 w-4" />
-							</a>
-							<a
-								href="https://twitter.com"
-								target="_blank"
-								rel="noopener noreferrer"
-								className="h-9 w-9 flex items-center justify-center rounded-xl bg-gray-800 text-gray-400 hover:bg-primary-500 hover:text-white transition-all"
-							>
-								<Twitter className="h-4 w-4" />
-							</a>
-							<a
-								href="https://instagram.com"
-								target="_blank"
-								rel="noopener noreferrer"
-								className="h-9 w-9 flex items-center justify-center rounded-xl bg-gray-800 text-gray-400 hover:bg-primary-500 hover:text-white transition-all"
-							>
-								<Instagram className="h-4 w-4" />
-							</a>
-						</div>
 					</div>
 
 					{/* Quick Links */}
