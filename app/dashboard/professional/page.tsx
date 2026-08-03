@@ -159,7 +159,7 @@ export default function ProfessionalDashboardPage() {
 	const userRole = user.user_metadata?.role || "professional";
 
 	return (
-		<div className="space-y-6 sm:space-y-8">
+		<div className="space-y-6 sm:space-y-8 bg-gradient-to-br from-primary-50/60 via-gray-50/80 to-green-50/40 -mx-6 -mt-6 px-6 py-6 sm:-mx-8 sm:px-8 sm:py-8 lg:-mx-10 lg:px-10 lg:py-10 min-h-[calc(100vh-4rem)]">
 			{/* Welcome Header */}
 			<div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
 				<div className="flex items-center gap-4">
