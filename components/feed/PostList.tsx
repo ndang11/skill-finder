@@ -33,6 +33,7 @@ export default function PostList({
 	currentUserName,
 	currentUserRole,
 	onLike,
+	onAddComment,
 	onDelete,
 	showDelete = false,
 	emptyMessage = "No updates found.",
