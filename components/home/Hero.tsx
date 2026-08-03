@@ -5,33 +5,38 @@ import { Search, Shield, Star, Users } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 
+const HERO_IMAGE =
+	"https://english.news.cn/20230126/9ddb949d81d441a5bfca9fd8cf25c719/202301269ddb949d81d441a5bfca9fd8cf25c719_67bf09c0-a6da-4707-8148-767eeb6214ed.jpg";
+
 export const Hero = () => {
 	return (
-		<section className="relative overflow-hidden bg-gradient-to-br from-primary-50 via-white to-green-50/30">
-			{/* Background decorations */}
-			<div className="absolute inset-0 -z-10 overflow-hidden">
-				<div className="absolute -top-40 -right-40 h-80 w-80 rounded-full bg-primary-200/40 blur-[100px]" />
-				<div className="absolute top-40 -left-40 h-80 w-80 rounded-full bg-green-200/30 blur-[100px]" />
-				<div className="absolute bottom-0 right-1/4 h-60 w-60 rounded-full bg-primary-100/30 blur-[80px]" />
-			</div>
+		<section
+			className="relative overflow-hidden bg-cover bg-center bg-no-repeat"
+			style={{
+				backgroundImage: `linear-gradient(to right, rgba(15, 23, 42, 0.92) 0%, rgba(15, 23, 42, 0.85) 50%, rgba(15, 23, 42, 0.7) 100%), url('${HERO_IMAGE}')`,
+			}}
+		>
+			{/* Ambient glow */}
+			<div className="absolute top-0 left-1/4 -z-10 h-[400px] w-[400px] rounded-full bg-primary-500/10 blur-[120px]" />
+			<div className="absolute bottom-0 right-1/4 -z-10 h-[500px] w-[500px] rounded-full bg-green-500/10 blur-[150px]" />
 
-			<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-16 pb-20 lg:pt-24 lg:pb-28">
+			<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-16 pb-20 lg:pt-24 lg:pb-28 relative z-10">
 				<div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
 					{/* Left Column: Headline and Action */}
 					<div className="lg:col-span-7 text-left space-y-6 lg:pr-6">
-						<span className="inline-flex items-center gap-1.5 rounded-full bg-primary-100 px-3.5 py-1.5 text-xs sm:text-sm font-bold text-primary-700 border border-primary-200">
+						<span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 backdrop-blur-md px-3.5 py-1.5 text-xs sm:text-sm font-semibold text-primary-300 border border-white/20">
 							🇨🇲 The #1 Artisan Directory in Cameroon
 						</span>
 
-						<h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-gray-900 tracking-tight leading-[1.1]">
+						<h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-[1.1]">
 							Find Trusted{" "}
-							<span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-500 to-green-600">
+							<span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-green-400">
 								Professionals
 							</span>{" "}
 							Anywhere in Cameroon.
 						</h1>
 
-						<p className="text-base sm:text-lg text-gray-600 max-w-xl leading-relaxed">
+						<p className="text-base sm:text-lg text-gray-300 max-w-xl leading-relaxed">
 							Connect directly with verified mechanics, electricians, plumbers,
 							and artisans near you. Skip the stress, check ratings, and hire
 							instantly via WhatsApp.
@@ -40,7 +45,7 @@ export const Hero = () => {
 						{/* CTA Buttons */}
 						<div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 pt-2">
 							<Link href="/search">
-								<Button className="w-full sm:w-auto text-base font-bold h-12 px-8 shadow-lg shadow-primary-500/20">
+								<Button className="w-full sm:w-auto text-base font-bold h-12 px-8 shadow-lg shadow-primary-500/20 bg-primary-500 hover:bg-primary-600 text-white">
 									<Search className="h-5 w-5 mr-2" />
 									Find Professionals
 								</Button>
@@ -48,7 +53,7 @@ export const Hero = () => {
 							<Link href="/categories">
 								<Button
 									variant="outline"
-									className="w-full sm:w-auto text-base font-bold h-12 px-8"
+									className="w-full sm:w-auto text-base font-bold h-12 px-8 border-white/20 text-white hover:bg-white/10"
 								>
 									Browse Categories
 								</Button>
@@ -57,20 +62,20 @@ export const Hero = () => {
 
 						{/* Trust badges */}
 						<div className="flex flex-wrap items-center gap-6 pt-4">
-							<div className="flex items-center gap-2 text-sm text-gray-600">
-								<div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-100 text-primary-600">
+							<div className="flex items-center gap-2 text-sm text-gray-300">
+								<div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/10 text-primary-300">
 									<Shield className="h-4 w-4" />
 								</div>
 								<span className="font-semibold">Verified Pros</span>
 							</div>
-							<div className="flex items-center gap-2 text-sm text-gray-600">
-								<div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-100 text-amber-600">
+							<div className="flex items-center gap-2 text-sm text-gray-300">
+								<div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/10 text-amber-300">
 									<Star className="h-4 w-4" />
 								</div>
 								<span className="font-semibold">Real Reviews</span>
 							</div>
-							<div className="flex items-center gap-2 text-sm text-gray-600">
-								<div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-100 text-blue-600">
+							<div className="flex items-center gap-2 text-sm text-gray-300">
+								<div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/10 text-blue-300">
 									<Users className="h-4 w-4" />
 								</div>
 								<span className="font-semibold">1,200+ Users</span>
@@ -81,10 +86,10 @@ export const Hero = () => {
 					{/* Right Column: Premium Showcase Profile Card */}
 					<div className="lg:col-span-5 relative flex justify-center lg:justify-end">
 						{/* Background Accent ring */}
-						<div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 sm:w-96 h-72 sm:h-96 rounded-full border-2 border-dashed border-primary-200 -z-10" />
+						<div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 sm:w-96 h-72 sm:h-96 rounded-full border-2 border-dashed border-white/10 -z-10" />
 
 						{/* Main Showcase Profile Card */}
-						<div className="w-full max-w-[360px] bg-white rounded-3xl p-6 shadow-xl shadow-gray-200/60 border border-gray-100 hover:-translate-y-1 transition-transform duration-300">
+						<div className="w-full max-w-[360px] bg-white rounded-3xl p-6 shadow-2xl shadow-black/40 border border-gray-100 hover:-translate-y-1 transition-transform duration-300">
 							{/* Card Header: Avatar & Badges */}
 							<div className="flex items-center gap-4">
 								<div className="relative">
@@ -112,7 +117,7 @@ export const Hero = () => {
 											>
 												<path
 													fillRule="evenodd"
-													d="M6.267 3.585a2.625 2.625 0 014.966 0l.071.217a.75.75 0 00.91.503l.218-.071a2.625 2.625 0 013.51 3.51l-.071.218a.75.75 0 00.503.91l.217.071a2.625 2.625 0 010 4.966l-.217.07a.75.75 0 00-.503.91l.071.218a2.625 2.625 0 01-3.51 3.51l-.218-.07a.75.75 0 00-.91.503l-.071.217a2.625 2.625 0 01-4.966 0l-.071-.217a.75.75 0 00-.91-.503l-.218.07a2.625 2.625 0 01-3.51-3.51l.071-.218a.75.75 0 00-.503-.91l-.217-.07a2.625 2.625 0 010-4.966l.217-.07a.75.75 0 00.503-.91l-.071-.218a2.625 2.625 0 013.51-3.51l.218.07a.75.75 0 00.91-.503l.071-.217zM10 12.75a2.75 2.75 0 100-5.5 2.75 2.75 0 000 5.5z"
+													d="M6.267 3.585a2.625 2.625 0 014.966 0l.071.217a.75.75 0 00.91.503l.218-.071a2.625 2.625 0 013.51 3.51l-.071.218a.75.75 0 00.503.91l.217.071a2.625 2.625 0 010 4.966l-.217.07a.75.75 0 00-.503.91l.071.218a2.625 2.625 0 01-3.51 3.51l-.218-.07a.75.75 0 00-.91.503l-.071.217a2.625 2.625 0 01-4.966 0l-.071-.217a.75.75 0 00-.91-.503l-.218.07a2.625 2.625 0 01-3.51-3.51l.071-.218a.75.75 0 00.503-.91l-.217-.07a2.625 2.625 0 010-4.966l.217-.07a.75.75 0 00.503-.91l-.071-.218a2.625 2.625 0 013.51-3.51l.218.07a.75.75 0 00.91-.503l.071-.217zM10 12.75a2.75 2.75 0 100-5.5 2.75 2.75 0 000 5.5z"
 													clipRule="evenodd"
 												/>
 											</svg>
