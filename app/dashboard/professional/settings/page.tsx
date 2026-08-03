@@ -1,6 +1,23 @@
+// app/dashboard/professional/settings/page.tsx
 "use client";
 
-import type { User } from "@supabase/supabase-js";
+import type { User as SupabaseUser } from "@supabase/supabase-js";
+import {
+	AlertCircle,
+	ArrowLeft,
+	Camera,
+	CheckCircle2,
+	KeyRound,
+	Loader2,
+	Lock,
+	Mail,
+	MapPin,
+	MessageCircle,
+	Plus,
+	Save,
+	Trash2,
+	User,
+} from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -12,12 +29,15 @@ import { apiRequest } from "@/services/api";
 import { professionalService } from "@/services/professional.service";
 import { uploadService } from "@/services/upload.service";
 import type { Professional } from "@/types/professional.types";
+import { cn } from "@/utils/cn";
 import { supabase } from "@/utils/supabase/client";
+
+type Tab = "profile" | "account";
 
 export default function SettingsPage() {
 	const router = useRouter();
-	const [user, setUser] = useState<User | null>(null);
-	const [activeTab, setActiveTab] = useState<"profile" | "account">("profile");
+	const [user, setUser] = useState<SupabaseUser | null>(null);
+	const [activeTab, setActiveTab] = useState<Tab>("profile");
 
 	const [authLoading, setAuthLoading] = useState(true);
 	const [profileLoading, setProfileLoading] = useState(true);
@@ -216,166 +236,203 @@ export default function SettingsPage() {
 	const initial = (formData.fullName || user.email || "U")
 		.charAt(0)
 		.toUpperCase();
+	const displayName = formData.fullName || user.email || "Professional";
+
+	const tabs: { id: Tab; label: string; icon: React.ReactNode }[] = [
+		{
+			id: "profile",
+			label: "Profile Settings",
+			icon: <User className="h-4 w-4" />,
+		},
+		{
+			id: "account",
+			label: "Account & Security",
+			icon: <Lock className="h-4 w-4" />,
+		},
+	];
 
 	return (
-		<div className="mx-auto max-w-2xl space-y-6">
-			{/* Page Header */}
-			<div className="flex items-center gap-4">
-				<button
-					type="button"
-					onClick={() => router.back()}
-					className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-500 transition-all hover:border-gray-300 hover:text-gray-800 active:scale-95"
-					aria-label="Go back"
-				>
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						width="18"
-						height="18"
-						viewBox="0 0 24 24"
-						fill="none"
-						stroke="currentColor"
-						strokeWidth="2.5"
-						strokeLinecap="round"
-						strokeLinejoin="round"
-						aria-hidden="true"
+		<div className="space-y-6 sm:space-y-8 bg-gradient-to-br from-primary-50/50 via-white to-green-50/30 -mx-6 -mt-6 px-6 py-6 sm:-mx-8 sm:px-8 sm:py-8 lg:-mx-10 lg:px-10 lg:py-10 min-h-[calc(100vh-4rem)]">
+			{/* Header */}
+			<div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+				<div className="flex items-center gap-4">
+					<button
+						type="button"
+						onClick={() => router.back()}
+						className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-500 transition-all hover:border-gray-300 hover:text-gray-800 active:scale-95 shadow-sm"
+						aria-label="Go back"
 					>
-						<path d="M19 12H5" />
-						<path d="m12 19-7-7 7-7" />
-					</svg>
-				</button>
-				<div>
-					<h1 className="text-2xl font-black text-gray-900">
-						Account & Profile Settings
-					</h1>
-					<p className="text-sm text-gray-500">
-						Manage your public profile details and account security.
-					</p>
+						<ArrowLeft className="h-5 w-5" />
+					</button>
+					<div>
+						<h1 className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight">
+							Settings
+						</h1>
+						<p className="text-sm text-gray-500">
+							Manage your public profile and account security,{" "}
+							{displayName.split(" ")[0]}.
+						</p>
+					</div>
 				</div>
 			</div>
 
+			{/* Alerts */}
+			{successMessage && (
+				<div className="flex items-center gap-3 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm font-medium text-green-700 animate-in fade-in-50">
+					<CheckCircle2 className="h-5 w-5 flex-shrink-0" />
+					{successMessage}
+				</div>
+			)}
+			{errorMessage && (
+				<div className="flex items-center gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700 animate-in fade-in-50">
+					<AlertCircle className="h-5 w-5 flex-shrink-0" />
+					{errorMessage}
+				</div>
+			)}
+
 			{/* Tab Switcher */}
-			<div className="flex border-b border-gray-200 gap-8">
-				<button
-					type="button"
-					onClick={() => setActiveTab("profile")}
-					className={`pb-3 text-sm font-bold border-b-2 transition-all ${
-						activeTab === "profile"
-							? "border-primary-500 text-primary-600"
-							: "border-transparent text-gray-400 hover:text-gray-600"
-					}`}
-				>
-					👤 Profile Settings
-				</button>
-				<button
-					type="button"
-					onClick={() => setActiveTab("account")}
-					className={`pb-3 text-sm font-bold border-b-2 transition-all ${
-						activeTab === "account"
-							? "border-primary-500 text-primary-600"
-							: "border-transparent text-gray-400 hover:text-gray-600"
-					}`}
-				>
-					🔒 Account & Security
-				</button>
+			<div className="flex flex-col sm:flex-row gap-3">
+				{tabs.map((tab) => (
+					<button
+						key={tab.id}
+						type="button"
+						onClick={() => setActiveTab(tab.id)}
+						className={cn(
+							"flex items-center gap-2.5 rounded-xl px-5 py-3 text-sm font-bold transition-all",
+							activeTab === tab.id
+								? "bg-white text-primary-700 shadow-md shadow-primary-500/10 border border-primary-200"
+								: "bg-white/60 text-gray-500 hover:bg-white hover:text-gray-700 border border-transparent",
+						)}
+					>
+						<span
+							className={cn(
+								"flex h-8 w-8 items-center justify-center rounded-lg",
+								activeTab === tab.id
+									? "bg-primary-100 text-primary-600"
+									: "bg-gray-100 text-gray-500",
+							)}
+						>
+							{tab.icon}
+						</span>
+						{tab.label}
+					</button>
+				))}
 			</div>
 
 			{/* Profile Settings Tab */}
 			{activeTab === "profile" && (
 				<Card className="p-6 sm:p-8">
 					<form onSubmit={handleSubmit} className="space-y-6">
-						{successMessage && (
-							<div className="rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm font-medium text-green-700 animate-in fade-in-50">
-								✅ {successMessage}
-							</div>
-						)}
-
-						{errorMessage && (
-							<div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700 animate-in fade-in-50">
-								⚠️ {errorMessage}
-							</div>
-						)}
-
 						{/* Avatar Upload Section */}
-						<div className="space-y-2">
-							<label
-								htmlFor="avatar-upload"
-								className="text-sm font-medium text-gray-700 tracking-wide block"
-							>
-								Profile Picture
-							</label>
-							<div className="flex items-center gap-5">
-								<div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-full border-2 border-gray-100 bg-gray-50 shadow-sm">
-									{formData.avatarUrl ? (
-										<Image
-											src={formData.avatarUrl}
-											alt="Profile Avatar"
-											fill
-											className="object-cover"
-											unoptimized
-										/>
-									) : (
-										<span className="flex h-full w-full items-center justify-center bg-primary-100 text-2xl font-black text-primary-700">
-											{initial}
-										</span>
-									)}
-								</div>
-								<div>
-									<label
-										htmlFor="avatar-upload"
-										className="inline-flex cursor-pointer items-center justify-center rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-700 shadow-sm transition-all hover:bg-gray-50 hover:border-gray-300 active:scale-95"
-									>
-										{avatarUploading ? "Uploading..." : "📷 Change Photo"}
-									</label>
-									<input
-										id="avatar-upload"
-										type="file"
-										accept="image/*"
-										className="hidden"
-										onChange={handleAvatarFileChange}
-										disabled={avatarUploading}
+						<div className="flex flex-col sm:flex-row items-start gap-5">
+							<div className="relative h-24 w-24 flex-shrink-0 overflow-hidden rounded-2xl border-2 border-gray-100 bg-gray-50 shadow-sm">
+								{formData.avatarUrl ? (
+									<Image
+										src={formData.avatarUrl}
+										alt="Profile Avatar"
+										fill
+										className="object-cover"
+										unoptimized
 									/>
-									<p className="mt-1 text-xs text-gray-400">
-										JPG, PNG or GIF up to 5MB
-									</p>
-								</div>
+								) : (
+									<span className="flex h-full w-full items-center justify-center bg-gradient-to-br from-primary-100 to-green-100 text-3xl font-black text-primary-700">
+										{initial}
+									</span>
+								)}
+								{avatarUploading && (
+									<div className="absolute inset-0 flex items-center justify-center bg-black/40">
+										<Loader2 className="h-6 w-6 animate-spin text-white" />
+									</div>
+								)}
+							</div>
+							<div className="space-y-2">
+								<label
+									htmlFor="avatar-upload"
+									className="text-sm font-medium text-gray-700 tracking-wide block"
+								>
+									Profile Picture
+								</label>
+								<label
+									htmlFor="avatar-upload"
+									className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm font-semibold text-gray-700 shadow-sm transition-all hover:bg-gray-50 hover:border-gray-300 active:scale-95"
+								>
+									<Camera className="h-4 w-4" />
+									{avatarUploading ? "Uploading..." : "Change Photo"}
+								</label>
+								<input
+									id="avatar-upload"
+									type="file"
+									accept="image/*"
+									className="hidden"
+									onChange={handleAvatarFileChange}
+									disabled={avatarUploading}
+								/>
+								<p className="text-xs text-gray-400">
+									JPG, PNG or GIF up to 5MB
+								</p>
 							</div>
 						</div>
 
 						{/* Full Name */}
-						<Input
-							label="Full Name"
-							id="fullName"
-							name="fullName"
-							type="text"
-							placeholder="e.g. Sarah Dev"
-							value={formData.fullName}
-							onChange={handleChange}
-							required
-						/>
+						<div className="space-y-1.5">
+							<label
+								htmlFor="fullName"
+								className="text-sm font-medium text-gray-700 tracking-wide flex items-center gap-2"
+							>
+								<User className="h-4 w-4 text-gray-400" />
+								Full Name
+							</label>
+							<Input
+								id="fullName"
+								name="fullName"
+								type="text"
+								placeholder="e.g. Sarah Dev"
+								value={formData.fullName}
+								onChange={handleChange}
+								required
+								className="h-12"
+							/>
+						</div>
 
 						{/* Location */}
-						<Input
-							label="Location"
-							id="location"
-							name="location"
-							type="text"
-							placeholder="e.g. San Francisco, CA (Remote)"
-							value={formData.location}
-							onChange={handleChange}
-						/>
+						<div className="space-y-1.5">
+							<label
+								htmlFor="location"
+								className="text-sm font-medium text-gray-700 tracking-wide flex items-center gap-2"
+							>
+								<MapPin className="h-4 w-4 text-gray-400" />
+								Location
+							</label>
+							<Input
+								id="location"
+								name="location"
+								type="text"
+								placeholder="e.g. Douala, Cameroon"
+								value={formData.location}
+								onChange={handleChange}
+								className="h-12"
+							/>
+						</div>
 
 						{/* WhatsApp Number */}
-						<div className="space-y-1">
+						<div className="space-y-1.5">
+							<label
+								htmlFor="whatsappNumber"
+								className="text-sm font-medium text-gray-700 tracking-wide flex items-center gap-2"
+							>
+								<MessageCircle className="h-4 w-4 text-gray-400" />
+								WhatsApp Number
+							</label>
 							<Input
-								label="WhatsApp Number"
 								id="whatsappNumber"
 								name="whatsappNumber"
 								type="tel"
-								placeholder="e.g. +1234567890"
+								placeholder="e.g. +237600000000"
 								value={formData.whatsappNumber}
 								onChange={handleChange}
+								className="h-12"
 							/>
-							<p className="text-[11px] text-gray-400">
+							<p className="text-xs text-gray-400">
 								Include international country code for direct client chats.
 							</p>
 						</div>
@@ -390,12 +447,12 @@ export default function SettingsPage() {
 							</label>
 
 							{/* Active Skill Badges */}
-							<div className="flex flex-wrap gap-2 min-h-[40px] p-3 rounded-xl border border-gray-200 bg-gray-50/50">
+							<div className="flex flex-wrap gap-2 min-h-[48px] p-4 rounded-xl border border-gray-200 bg-gray-50/50">
 								{skills.length > 0 ? (
 									skills.map((skill) => (
 										<span
 											key={skill}
-											className="inline-flex items-center gap-1.5 rounded-full bg-primary-100 px-3 py-1 text-xs font-bold text-primary-700"
+											className="inline-flex items-center gap-1.5 rounded-full bg-primary-100 px-3 py-1.5 text-xs font-bold text-primary-700"
 										>
 											{skill}
 											<button
@@ -404,7 +461,7 @@ export default function SettingsPage() {
 												className="hover:text-red-600 transition-colors text-sm leading-none"
 												title="Remove skill"
 											>
-												×
+												<Trash2 className="h-3 w-3" />
 											</button>
 										</span>
 									))
@@ -424,15 +481,16 @@ export default function SettingsPage() {
 									value={newSkillInput}
 									onChange={(e) => setNewSkillInput(e.target.value)}
 									onKeyDown={handleSkillKeyDown}
-									className="flex-1"
+									className="flex-1 h-12"
 								/>
 								<Button
 									type="button"
 									variant="outline"
-									className="w-auto px-4"
+									className="w-auto px-4 h-12"
 									onClick={handleAddSkill}
 								>
-									Add Skill
+									<Plus className="h-4 w-4 mr-1.5" />
+									Add
 								</Button>
 							</div>
 						</div>
@@ -442,7 +500,7 @@ export default function SettingsPage() {
 							<div className="flex items-center justify-between">
 								<label
 									htmlFor="bio"
-									className="text-sm font-medium text-gray-700 tracking-wide block"
+									className="text-sm font-medium text-gray-700 tracking-wide flex items-center gap-2"
 								>
 									Bio / About Me
 								</label>
@@ -458,6 +516,7 @@ export default function SettingsPage() {
 								value={formData.bio}
 								onChange={handleChange}
 								maxLength={1000}
+								className="min-h-[120px]"
 							/>
 						</div>
 
@@ -466,17 +525,27 @@ export default function SettingsPage() {
 							<Button
 								type="button"
 								variant="outline"
-								className="w-auto px-6"
+								className="w-auto px-6 h-11"
 								onClick={() => router.back()}
 							>
 								Cancel
 							</Button>
 							<Button
 								type="submit"
-								className="w-auto px-8"
+								className="w-auto px-8 h-11 font-semibold shadow-sm"
 								disabled={isSubmitting || avatarUploading}
 							>
-								{isSubmitting ? "Saving..." : "Save Changes"}
+								{isSubmitting ? (
+									<span className="flex items-center gap-2">
+										<Loader2 className="h-4 w-4 animate-spin" />
+										Saving...
+									</span>
+								) : (
+									<span className="flex items-center gap-2">
+										<Save className="h-4 w-4" />
+										Save Changes
+									</span>
+								)}
 							</Button>
 						</div>
 					</form>
@@ -485,57 +554,81 @@ export default function SettingsPage() {
 
 			{/* Account & Security Tab */}
 			{activeTab === "account" && (
-				<Card className="p-6 sm:p-8 space-y-6">
-					<div>
-						<h3 className="text-lg font-bold text-gray-900">Account Details</h3>
-						<p className="text-xs text-gray-500">
-							Your login credentials and account status.
-						</p>
-					</div>
+				<div className="space-y-6">
+					{/* Account Details */}
+					<Card className="p-6 sm:p-8 space-y-6">
+						<div>
+							<h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+								<Mail className="h-5 w-5 text-primary-500" />
+								Account Details
+							</h3>
+							<p className="text-xs text-gray-500 mt-1">
+								Your login credentials and account status.
+							</p>
+						</div>
 
-					<div className="space-y-4 rounded-xl bg-gray-50 p-4 border border-gray-100 text-sm">
-						<div className="flex items-center justify-between">
-							<span className="font-semibold text-gray-600">
-								Email Address:
-							</span>
-							<span className="font-mono text-gray-900">{user.email}</span>
+						<div className="space-y-4 rounded-xl bg-gray-50 p-5 border border-gray-100">
+							<div className="flex items-center justify-between gap-4">
+								<span className="font-semibold text-gray-600 text-sm">
+									Email Address:
+								</span>
+								<span className="font-mono text-gray-900 text-sm font-bold truncate">
+									{user.email}
+								</span>
+							</div>
+							<div className="flex items-center justify-between gap-4 border-t border-gray-200/60 pt-4">
+								<span className="font-semibold text-gray-600 text-sm">
+									Account Role:
+								</span>
+								<span className="capitalize font-bold text-primary-700 bg-primary-100 px-3 py-1 rounded-lg text-xs">
+									{user.user_metadata?.role || "Professional"}
+								</span>
+							</div>
 						</div>
-						<div className="flex items-center justify-between border-t border-gray-200/60 pt-3">
-							<span className="font-semibold text-gray-600">Account Role:</span>
-							<span className="capitalize font-bold text-primary-700 bg-primary-100 px-2.5 py-0.5 rounded-md text-xs">
-								{user.user_metadata?.role || "Professional"}
-							</span>
-						</div>
-					</div>
+					</Card>
 
 					{/* Security Section */}
-					<div className="space-y-3 pt-2 border-t border-gray-100">
-						<h3 className="text-lg font-bold text-gray-900">Security</h3>
-						<p className="text-xs text-gray-500">
-							Request a secure password reset link sent directly to your
-							registered email.
-						</p>
+					<Card className="p-6 sm:p-8 space-y-6">
+						<div>
+							<h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+								<KeyRound className="h-5 w-5 text-primary-500" />
+								Security
+							</h3>
+							<p className="text-xs text-gray-500 mt-1">
+								Request a secure password reset link sent directly to your
+								registered email.
+							</p>
+						</div>
 
 						{resetEmailSent ? (
-							<div className="rounded-xl border border-green-200 bg-green-50 p-4 text-xs font-semibold text-green-700">
-								📩 Password reset email sent to <strong>{user.email}</strong>.
+							<div className="flex items-center gap-3 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm font-semibold text-green-700">
+								<CheckCircle2 className="h-5 w-5 flex-shrink-0" />
+								Password reset email sent to <strong>{user.email}</strong>.
 								Please check your inbox.
 							</div>
 						) : (
 							<Button
 								type="button"
 								variant="outline"
-								className="w-auto text-sm px-5 h-10"
+								className="w-auto text-sm px-5 h-11"
 								onClick={handlePasswordReset}
 								disabled={resetEmailLoading}
 							>
-								{resetEmailLoading
-									? "Sending Email..."
-									: "🔑 Send Password Reset Link"}
+								{resetEmailLoading ? (
+									<span className="flex items-center gap-2">
+										<Loader2 className="h-4 w-4 animate-spin" />
+										Sending Email...
+									</span>
+								) : (
+									<span className="flex items-center gap-2">
+										<KeyRound className="h-4 w-4" />
+										Send Password Reset Link
+									</span>
+								)}
 							</Button>
 						)}
-					</div>
-				</Card>
+					</Card>
+				</div>
 			)}
 		</div>
 	);
