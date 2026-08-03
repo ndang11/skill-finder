@@ -1,7 +1,23 @@
-// app/dashboard/professional/posts/new/page.tsx
 "use client";
 
 import type { User } from "@supabase/supabase-js";
+import {
+	AlignLeft,
+	ArrowLeft,
+	Calendar,
+	CheckCircle2,
+	Eye,
+	Hash,
+	ImageIcon,
+	Loader2,
+	Megaphone,
+	Send,
+	Sparkles,
+	Tag,
+	Trash2,
+	Type,
+	Upload,
+} from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -36,25 +52,49 @@ const POST_TYPES = [
 		id: "showcase",
 		label: "Work Showcase",
 		description: "Show off a completed project or piece of work",
-		icon: "🖼️",
+		icon: ImageIcon,
+		color: "text-blue-600",
+		bg: "bg-blue-50",
+		border: "border-blue-200",
+		activeBg: "bg-blue-50",
+		activeBorder: "border-blue-500",
+		ring: "ring-blue-100",
 	},
 	{
 		id: "tip",
 		label: "Pro Tip",
 		description: "Share a useful tip or trick with the community",
-		icon: "💡",
+		icon: Sparkles,
+		color: "text-amber-600",
+		bg: "bg-amber-50",
+		border: "border-amber-200",
+		activeBg: "bg-amber-50",
+		activeBorder: "border-amber-500",
+		ring: "ring-amber-100",
 	},
 	{
 		id: "availability",
 		label: "Availability Update",
 		description: "Let customers know your current availability",
-		icon: "📅",
+		icon: Calendar,
+		color: "text-emerald-600",
+		bg: "bg-emerald-50",
+		border: "border-emerald-200",
+		activeBg: "bg-emerald-50",
+		activeBorder: "border-emerald-500",
+		ring: "ring-emerald-100",
 	},
 	{
 		id: "announcement",
 		label: "Announcement",
 		description: "Make a general announcement to your followers",
-		icon: "📣",
+		icon: Megaphone,
+		color: "text-purple-600",
+		bg: "bg-purple-50",
+		border: "border-purple-200",
+		activeBg: "bg-purple-50",
+		activeBorder: "border-purple-500",
+		ring: "ring-purple-100",
 	},
 ];
 
@@ -75,7 +115,7 @@ interface FormErrors {
 	postType?: string;
 }
 
-// ─── Char counter helper ───────────────────────────────────────────────────────
+// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function CharCount({ current, max }: { current: number; max: number }) {
 	const remaining = max - current;
@@ -84,7 +124,7 @@ function CharCount({ current, max }: { current: number; max: number }) {
 	return (
 		<span
 			className={cn(
-				"text-xs tabular-nums",
+				"text-xs tabular-nums font-medium",
 				isOver
 					? "text-red-500 font-semibold"
 					: isNear
@@ -168,18 +208,15 @@ export default function NewPostPage() {
 		if (!file) return;
 		setImageFile(file);
 
-		// Show local preview immediately
 		const reader = new FileReader();
 		reader.onload = (ev) => setImagePreview(ev.target?.result as string);
 		reader.readAsDataURL(file);
 
-		// Upload to Cloudinary in the background
 		try {
 			setImageUploading(true);
 			const url = await uploadService.handleImageUpload(file, "posts");
 			setImageUrl(url);
 		} catch {
-			// Non-blocking — post can still be created without an image
 			setImageUrl(null);
 		} finally {
 			setImageUploading(false);
@@ -247,7 +284,7 @@ export default function NewPostPage() {
 		return (
 			<div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 text-center">
 				<div className="flex h-20 w-20 items-center justify-center rounded-full bg-primary-50 text-4xl animate-in zoom-in-50">
-					✅
+					<CheckCircle2 className="h-10 w-10 text-primary-600" />
 				</div>
 				<h2 className="text-2xl font-black text-gray-900">Post Published!</h2>
 				<p className="text-gray-500">Redirecting you back to your dashboard…</p>
@@ -257,129 +294,143 @@ export default function NewPostPage() {
 
 	const displayName =
 		user.user_metadata?.fullname?.split(" ")[0] || "Professional";
+	const selectedPostType = POST_TYPES.find((t) => t.id === values.postType);
 
 	return (
-		<div className="space-y-8 max-w-3xl mx-auto">
+		<div className="space-y-6 sm:space-y-8 bg-gradient-to-br from-primary-50/50 via-white to-green-50/30 -mx-6 -mt-6 px-6 py-6 sm:-mx-8 sm:px-8 sm:py-8 lg:-mx-10 lg:px-10 lg:py-10 min-h-[calc(100vh-4rem)]">
 			{/* ── Page Header ── */}
-			<div className="flex items-center gap-4">
-				<button
-					type="button"
-					onClick={() => router.back()}
-					className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-500 transition-all hover:border-gray-300 hover:text-gray-800 active:scale-95"
-					aria-label="Go back"
-				>
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						width="18"
-						height="18"
-						viewBox="0 0 24 24"
-						fill="none"
-						stroke="currentColor"
-						strokeWidth="2.5"
-						strokeLinecap="round"
-						strokeLinejoin="round"
-						aria-hidden="true"
+			<div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+				<div className="flex items-center gap-4">
+					<button
+						type="button"
+						onClick={() => router.back()}
+						className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-500 transition-all hover:border-gray-300 hover:text-gray-800 active:scale-95 shadow-sm"
+						aria-label="Go back"
 					>
-						<path d="M19 12H5" />
-						<path d="m12 19-7-7 7-7" />
-					</svg>
-				</button>
-				<div>
-					<h1 className="text-2xl font-black text-gray-900">Create New Post</h1>
-					<p className="text-sm text-gray-500">
-						Share your work, tips, or updates with the community, {displayName}.
-					</p>
+						<ArrowLeft className="h-5 w-5" />
+					</button>
+					<div>
+						<h1 className="text-2xl font-black text-gray-900 tracking-tight">
+							Create New Post
+						</h1>
+						<p className="text-sm text-gray-500">
+							Share your work, tips, or updates with the community,{" "}
+							{displayName}.
+						</p>
+					</div>
+				</div>
+				<div className="flex items-center gap-2">
+					<span className="text-xs text-gray-400 hidden sm:inline">
+						{Object.values(values).filter(Boolean).length} of 5 fields filled
+					</span>
 				</div>
 			</div>
 
 			<form onSubmit={handleSubmit} noValidate className="space-y-6">
 				{/* ── Global server error ── */}
 				{serverError && (
-					<div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
-						⚠️ {serverError}
-					</div>
+					<Card className="p-4 border-red-200 bg-red-50">
+						<p className="text-sm font-medium text-red-700 flex items-center gap-2">
+							<span className="h-5 w-5 rounded-full bg-red-100 flex items-center justify-center text-xs">
+								!
+							</span>
+							{serverError}
+						</p>
+					</Card>
 				)}
 
 				{/* ── Step 1: Post Type ── */}
-				<Card className="p-6 space-y-4">
+				<Card className="p-6 sm:p-8 space-y-5">
 					<div className="flex items-center gap-3">
-						<span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary-500 text-xs font-black text-white">
+						<span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-500 text-xs font-black text-white ring-4 ring-primary-100">
 							1
 						</span>
-						<h2 className="text-base font-black text-gray-900">
-							What are you posting?
-						</h2>
+						<div>
+							<h2 className="text-base font-black text-gray-900">
+								What are you posting?
+							</h2>
+							<p className="text-xs text-gray-500">
+								Choose the type that best fits your content
+							</p>
+						</div>
 					</div>
 
 					<div className="grid gap-3 sm:grid-cols-2">
-						{POST_TYPES.map((type) => (
-							<button
-								key={type.id}
-								type="button"
-								onClick={() => handleChange("postType", type.id)}
-								className={cn(
-									"flex items-start gap-3 rounded-xl border-2 p-4 text-left transition-all active:scale-[0.99]",
-									values.postType === type.id
-										? "border-primary-500 bg-primary-50"
-										: "border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50",
-								)}
-							>
-								<span className="text-2xl leading-none mt-0.5">
-									{type.icon}
-								</span>
-								<div>
-									<p
+						{POST_TYPES.map((type) => {
+							const Icon = type.icon;
+							const isActive = values.postType === type.id;
+							return (
+								<button
+									key={type.id}
+									type="button"
+									onClick={() => handleChange("postType", type.id)}
+									className={cn(
+										"flex items-start gap-4 rounded-xl border-2 p-4 text-left transition-all active:scale-[0.99]",
+										isActive
+											? `${type.activeBorder} ${type.activeBg} ring-2 ${type.ring}`
+											: "border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50",
+									)}
+								>
+									<div
 										className={cn(
-											"text-sm font-bold leading-tight",
-											values.postType === type.id
-												? "text-primary-700"
-												: "text-gray-800",
+											"flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg",
+											isActive ? type.bg : "bg-gray-100",
 										)}
 									>
-										{type.label}
-									</p>
-									<p className="mt-0.5 text-xs text-gray-500">
-										{type.description}
-									</p>
-								</div>
-								{values.postType === type.id && (
-									<span className="ml-auto text-primary-500 flex-shrink-0">
-										<svg
-											xmlns="http://www.w3.org/2000/svg"
-											width="18"
-											height="18"
-											viewBox="0 0 24 24"
-											fill="none"
-											stroke="currentColor"
-											strokeWidth="3"
-											strokeLinecap="round"
-											strokeLinejoin="round"
-											aria-hidden="true"
+										<Icon
+											className={cn(
+												"h-5 w-5",
+												isActive ? type.color : "text-gray-500",
+											)}
+										/>
+									</div>
+									<div className="flex-1 min-w-0">
+										<p
+											className={cn(
+												"text-sm font-bold leading-tight",
+												isActive ? type.color : "text-gray-800",
+											)}
 										>
-											<path d="M20 6 9 17l-5-5" />
-										</svg>
-									</span>
-								)}
-							</button>
-						))}
+											{type.label}
+										</p>
+										<p className="mt-0.5 text-xs text-gray-500">
+											{type.description}
+										</p>
+									</div>
+									{isActive && (
+										<span className={cn("flex-shrink-0 mt-0.5", type.color)}>
+											<CheckCircle2 className="h-5 w-5" />
+										</span>
+									)}
+								</button>
+							);
+						})}
 					</div>
 
 					{touched.postType && errors.postType && (
-						<p className="text-xs font-medium text-red-500 animate-in fade-in-50">
+						<p className="text-xs font-medium text-red-500 animate-in fade-in-50 flex items-center gap-1">
+							<span className="h-4 w-4 rounded-full bg-red-100 flex items-center justify-center text-[10px] font-bold text-red-600">
+								!
+							</span>
 							{errors.postType}
 						</p>
 					)}
 				</Card>
 
 				{/* ── Step 2: Content ── */}
-				<Card className="p-6 space-y-5">
+				<Card className="p-6 sm:p-8 space-y-5">
 					<div className="flex items-center gap-3">
-						<span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary-500 text-xs font-black text-white">
+						<span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-500 text-xs font-black text-white ring-4 ring-primary-100">
 							2
 						</span>
-						<h2 className="text-base font-black text-gray-900">
-							Write your post
-						</h2>
+						<div>
+							<h2 className="text-base font-black text-gray-900">
+								Write your post
+							</h2>
+							<p className="text-xs text-gray-500">
+								Craft a compelling title and description
+							</p>
+						</div>
 					</div>
 
 					{/* Title */}
@@ -387,8 +438,9 @@ export default function NewPostPage() {
 						<div className="flex items-center justify-between">
 							<label
 								htmlFor="title"
-								className="text-sm font-medium text-gray-700 tracking-wide"
+								className="text-sm font-medium text-gray-700 tracking-wide flex items-center gap-2"
 							>
+								<Type className="h-4 w-4 text-gray-400" />
 								Title
 							</label>
 							<CharCount current={values.title.length} max={100} />
@@ -403,6 +455,7 @@ export default function NewPostPage() {
 							onBlur={() => handleBlur("title")}
 							error={touched.title ? errors.title : undefined}
 							maxLength={110}
+							className="h-12"
 						/>
 					</div>
 
@@ -411,8 +464,9 @@ export default function NewPostPage() {
 						<div className="flex items-center justify-between">
 							<label
 								htmlFor="content"
-								className="text-sm font-medium text-gray-700 tracking-wide"
+								className="text-sm font-medium text-gray-700 tracking-wide flex items-center gap-2"
 							>
+								<AlignLeft className="h-4 w-4 text-gray-400" />
 								Content
 							</label>
 							<CharCount current={values.content.length} max={1000} />
@@ -427,6 +481,7 @@ export default function NewPostPage() {
 							onBlur={() => handleBlur("content")}
 							error={touched.content ? errors.content : undefined}
 							maxLength={1020}
+							className="min-h-[140px]"
 						/>
 					</div>
 
@@ -434,8 +489,9 @@ export default function NewPostPage() {
 					<div className="space-y-1.5">
 						<label
 							htmlFor="category"
-							className="text-sm font-medium text-gray-700 tracking-wide block"
+							className="text-sm font-medium text-gray-700 tracking-wide flex items-center gap-2"
 						>
+							<Hash className="h-4 w-4 text-gray-400" />
 							Category
 						</label>
 						<div className="relative">
@@ -480,7 +536,10 @@ export default function NewPostPage() {
 							</div>
 						</div>
 						{touched.category && errors.category && (
-							<p className="text-xs font-medium text-red-500 animate-in fade-in-50">
+							<p className="text-xs font-medium text-red-500 animate-in fade-in-50 flex items-center gap-1">
+								<span className="h-4 w-4 rounded-full bg-red-100 flex items-center justify-center text-[10px] font-bold text-red-600">
+									!
+								</span>
 								{errors.category}
 							</p>
 						)}
@@ -492,6 +551,7 @@ export default function NewPostPage() {
 							htmlFor="tags"
 							className="text-sm font-medium text-gray-700 tracking-wide flex items-center gap-2"
 						>
+							<Tag className="h-4 w-4 text-gray-400" />
 							Tags
 							<span className="text-xs text-gray-400 font-normal">
 								(optional)
@@ -504,17 +564,21 @@ export default function NewPostPage() {
 							placeholder="e.g. carpentry, wood-work, renovation"
 							value={values.tags}
 							onChange={(e) => handleChange("tags", e.target.value)}
+							className="h-12"
 						/>
-						<p className="text-xs text-gray-400">
+						<p className="text-xs text-gray-400 flex items-center gap-1">
+							<span className="h-3 w-3 rounded-full bg-gray-100 flex items-center justify-center text-[8px] font-bold text-gray-500">
+								i
+							</span>
 							Separate tags with commas to help customers discover your post.
 						</p>
 					</div>
 				</Card>
 
 				{/* ── Step 3: Media ── */}
-				<Card className="p-6 space-y-4">
+				<Card className="p-6 sm:p-8 space-y-4">
 					<div className="flex items-center gap-3">
-						<span className="flex h-7 w-7 items-center justify-center rounded-full bg-gray-200 text-xs font-black text-gray-600">
+						<span className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 text-xs font-black text-gray-600 ring-4 ring-gray-100">
 							3
 						</span>
 						<div>
@@ -531,7 +595,7 @@ export default function NewPostPage() {
 					</div>
 
 					{imagePreview ? (
-						<div className="relative group rounded-xl overflow-hidden border border-gray-200">
+						<div className="relative group rounded-xl overflow-hidden border border-gray-200 shadow-sm">
 							<Image
 								src={imagePreview}
 								alt="Post image preview"
@@ -540,41 +604,30 @@ export default function NewPostPage() {
 								className="w-full max-h-72 object-cover"
 								unoptimized
 							/>
+							<div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
 							<button
 								type="button"
 								onClick={removeImage}
-								className="absolute top-2 right-2 flex h-8 w-8 items-center justify-center rounded-full bg-gray-900/70 text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
+								className="absolute top-3 right-3 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-gray-700 opacity-0 group-hover:opacity-100 transition-all hover:bg-red-50 hover:text-red-600 shadow-lg"
 								aria-label="Remove image"
 							>
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									width="14"
-									height="14"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-									strokeWidth="2.5"
-									strokeLinecap="round"
-									strokeLinejoin="round"
-									aria-hidden="true"
-								>
-									<path d="M18 6 6 18" />
-									<path d="m6 6 12 12" />
-								</svg>
+								<Trash2 className="h-4 w-4" />
 							</button>
-							<div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/40 to-transparent px-4 py-3 flex items-center justify-between">
-								<p className="text-xs text-white font-medium truncate">
+							<div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent px-4 py-3 flex items-center justify-between opacity-0 group-hover:opacity-100 transition-opacity">
+								<p className="text-xs text-white font-medium truncate flex items-center gap-2">
+									<ImageIcon className="h-3 w-3" />
 									{imageFile?.name}
 								</p>
 								{imageUploading && (
 									<span className="flex items-center gap-1 text-xs text-white/80">
-										<span className="h-3 w-3 animate-spin rounded-full border-2 border-white border-t-transparent" />
+										<Loader2 className="h-3 w-3 animate-spin" />
 										Uploading…
 									</span>
 								)}
 								{!imageUploading && imageUrl && (
-									<span className="text-xs text-green-300 font-semibold">
-										✓ Ready
+									<span className="text-xs text-green-300 font-semibold flex items-center gap-1">
+										<CheckCircle2 className="h-3 w-3" />
+										Ready
 									</span>
 								)}
 							</div>
@@ -583,10 +636,10 @@ export default function NewPostPage() {
 						<button
 							type="button"
 							onClick={() => imageInputRef.current?.click()}
-							className="flex w-full flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed border-gray-200 bg-gray-50/50 px-6 py-10 transition-all hover:border-primary-300 hover:bg-primary-50/30 active:scale-[0.99]"
+							className="flex w-full flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed border-gray-200 bg-gray-50/50 px-6 py-12 transition-all hover:border-primary-300 hover:bg-primary-50/30 active:scale-[0.99]"
 						>
-							<div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary-100 text-primary-600 text-xl">
-								📷
+							<div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-100 text-primary-600">
+								<Upload className="h-6 w-6" />
 							</div>
 							<div className="text-center">
 								<p className="text-sm font-semibold text-gray-700">
@@ -611,48 +664,72 @@ export default function NewPostPage() {
 
 				{/* ── Preview strip ── */}
 				{values.title && values.postType && (
-					<div className="rounded-xl border border-primary-100 bg-primary-50/50 p-4 flex items-start gap-4">
-						<span className="text-2xl leading-none mt-0.5">
-							{POST_TYPES.find((t) => t.id === values.postType)?.icon ?? "📝"}
-						</span>
-						<div className="min-w-0">
-							<p className="text-xs font-semibold text-primary-600 uppercase tracking-wide mb-0.5">
-								Preview
-							</p>
-							<p className="text-sm font-bold text-gray-900 truncate">
-								{values.title || "Your post title"}
-							</p>
-							{values.content && (
-								<p className="mt-1 text-xs text-gray-500 line-clamp-2">
-									{values.content}
+					<Card className="p-5 border-primary-100 bg-primary-50/50">
+						<div className="flex items-start gap-4">
+							<div
+								className={cn(
+									"flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg",
+									selectedPostType?.bg || "bg-gray-100",
+								)}
+							>
+								{selectedPostType && (
+									<selectedPostType.icon
+										className={cn(
+											"h-5 w-5",
+											selectedPostType?.color || "text-gray-500",
+										)}
+									/>
+								)}
+							</div>
+							<div className="min-w-0 flex-1">
+								<p className="text-xs font-semibold text-primary-600 uppercase tracking-wide mb-0.5 flex items-center gap-1">
+									<Eye className="h-3 w-3" />
+									Preview
 								</p>
-							)}
+								<p className="text-sm font-bold text-gray-900 truncate">
+									{values.title || "Your post title"}
+								</p>
+								{values.content && (
+									<p className="mt-1 text-xs text-gray-500 line-clamp-2">
+										{values.content}
+									</p>
+								)}
+								{values.category && (
+									<span className="inline-block mt-2 text-[11px] font-semibold px-2 py-0.5 rounded-md bg-white border border-gray-200 text-gray-600">
+										{values.category}
+									</span>
+								)}
+							</div>
 						</div>
-					</div>
+					</Card>
 				)}
 
 				{/* ── Submit row ── */}
-				<div className="flex items-center justify-end gap-3 pt-2">
+				<div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-2">
 					<Button
 						type="button"
 						variant="outline"
-						className="w-auto px-6"
+						className="w-full sm:w-auto px-6 h-11"
 						onClick={() => router.back()}
 					>
+						<ArrowLeft className="h-4 w-4 mr-2" />
 						Cancel
 					</Button>
 					<Button
 						type="submit"
-						className="w-auto px-8"
+						className="w-full sm:w-auto px-8 h-11 font-semibold shadow-sm"
 						disabled={isSubmitting || imageUploading}
 					>
 						{isSubmitting ? (
 							<span className="flex items-center gap-2">
-								<span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+								<Loader2 className="h-4 w-4 animate-spin" />
 								Publishing…
 							</span>
 						) : (
-							"Publish Post"
+							<span className="flex items-center gap-2">
+								<Send className="h-4 w-4" />
+								Publish Post
+							</span>
 						)}
 					</Button>
 				</div>
