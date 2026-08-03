@@ -84,6 +84,7 @@ export default function ProfessionalDashboardPage() {
 		error: postsError,
 		fetchPosts,
 		handleLike,
+		handleAddComment,
 		handleDeletePost,
 	} = usePosts();
 
@@ -297,6 +298,7 @@ export default function ProfessionalDashboardPage() {
 						}
 						currentUserRole="professional"
 						onLike={handleLike}
+						onAddComment={handleAddComment}
 						onDelete={handleDeletePost}
 						showDelete={false}
 						emptyMessage="No platform updates yet."

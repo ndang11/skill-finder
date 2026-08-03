@@ -33,6 +33,7 @@ export default function CustomerDashboardPage() {
 		error: postsError,
 		fetchPosts,
 		handleLike,
+		handleAddComment,
 	} = usePosts();
 
 	useEffect(() => {
@@ -152,6 +153,7 @@ export default function CustomerDashboardPage() {
 						}
 						currentUserRole="customer"
 						onLike={handleLike}
+						onAddComment={handleAddComment}
 						emptyMessage={
 							activeCategory === "All"
 								? "No updates yet from professionals."

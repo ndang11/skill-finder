@@ -20,6 +20,7 @@ export default function AdminDashboardPage() {
 		error: postsError,
 		fetchPosts,
 		handleLike,
+		handleAddComment,
 		handleDeletePost,
 	} = usePosts();
 
@@ -115,6 +116,7 @@ export default function AdminDashboardPage() {
 						currentUserName="Admin"
 						currentUserRole="admin"
 						onLike={handleLike}
+						onAddComment={handleAddComment}
 						onDelete={handleDeletePost}
 						showDelete={true}
 						emptyMessage="No posts on the platform yet."

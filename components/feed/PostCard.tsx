@@ -44,6 +44,13 @@ interface PostCardProps {
 	currentUserName?: string;
 	currentUserRole?: "customer" | "professional" | "admin";
 	onLike?: (postId: string, userId: string) => void;
+	onAddComment?: (
+		postId: string,
+		content: string,
+		authorId: string,
+		authorName: string,
+		authorRole: "customer" | "professional" | "admin",
+	) => void;
 	onDelete?: (postId: string) => void;
 	showDelete?: boolean;
 }
@@ -54,6 +61,7 @@ export default function PostCard({
 	currentUserName = "Guest",
 	currentUserRole = "customer",
 	onLike,
+	onAddComment,
 	onDelete,
 	showDelete = false,
 }: PostCardProps) {
@@ -89,19 +97,20 @@ export default function PostCard({
 		setTimeout(() => setLikeAnimating(false), 300);
 	};
 
-	const handleComment = () => {
-		if (!commentInput.trim()) return;
-		const newComment = {
-			id: `c-${Date.now()}`,
-			postId: post.id,
-			authorId: currentUserId,
-			authorName: currentUserName,
-			authorRole: currentUserRole,
-			content: commentInput.trim(),
-			createdAt: new Date().toISOString(),
-		};
-		setLocalComments((prev) => [...prev, newComment]);
-		setCommentInput("");
+	const handleComment = async () => {
+		if (!commentInput.trim() || !onAddComment) return;
+		try {
+			await onAddComment(
+				post.id,
+				commentInput.trim(),
+				currentUserId,
+				currentUserName,
+				currentUserRole,
+			);
+			setCommentInput("");
+		} catch (err) {
+			console.error("Failed to post comment:", err);
+		}
 	};
 
 	return (

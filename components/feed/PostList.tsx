@@ -13,6 +13,13 @@ interface PostListProps {
 	currentUserName?: string;
 	currentUserRole?: "customer" | "professional" | "admin";
 	onLike?: (postId: string, userId: string) => void;
+	onAddComment?: (
+		postId: string,
+		content: string,
+		authorId: string,
+		authorName: string,
+		authorRole: "customer" | "professional" | "admin",
+	) => void;
 	onDelete?: (postId: string) => void;
 	showDelete?: boolean;
 	emptyMessage?: string;
@@ -73,6 +80,7 @@ export default function PostList({
 					currentUserName={currentUserName}
 					currentUserRole={currentUserRole}
 					onLike={onLike}
+					onAddComment={onAddComment}
 					onDelete={onDelete}
 					showDelete={showDelete}
 				/>
