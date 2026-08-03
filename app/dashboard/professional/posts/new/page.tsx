@@ -300,7 +300,7 @@ export default function NewPostPage() {
 		<div className="space-y-6 sm:space-y-8 bg-gradient-to-br from-primary-50/50 via-white to-green-50/30 -mx-6 -mt-6 px-6 py-6 sm:-mx-8 sm:px-8 sm:py-8 lg:-mx-10 lg:px-10 lg:py-10 min-h-[calc(100vh-4rem)]">
 			{/* ── Page Header ── */}
 			<div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-				<div className="flex items-center gap-4">
+				<div className="flex items-center gap-3 sm:gap-4">
 					<button
 						type="button"
 						onClick={() => router.back()}
@@ -309,17 +309,17 @@ export default function NewPostPage() {
 					>
 						<ArrowLeft className="h-5 w-5" />
 					</button>
-					<div>
-						<h1 className="text-2xl font-black text-gray-900 tracking-tight">
+					<div className="text-center sm:text-left">
+						<h1 className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight">
 							Create New Post
 						</h1>
-						<p className="text-sm text-gray-500">
+						<p className="text-xs sm:text-sm text-gray-500 mt-0.5">
 							Share your work, tips, or updates with the community,{" "}
 							{displayName}.
 						</p>
 					</div>
 				</div>
-				<div className="flex items-center gap-2">
+				<div className="flex items-center justify-center sm:justify-end gap-2">
 					<span className="text-xs text-gray-400 hidden sm:inline">
 						{Object.values(values).filter(Boolean).length} of 5 fields filled
 					</span>
@@ -355,7 +355,7 @@ export default function NewPostPage() {
 						</div>
 					</div>
 
-					<div className="grid gap-3 sm:grid-cols-2">
+					<div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
 						{POST_TYPES.map((type) => {
 							const Icon = type.icon;
 							const isActive = values.postType === type.id;
@@ -601,7 +601,7 @@ export default function NewPostPage() {
 								alt="Post image preview"
 								width={800}
 								height={288}
-								className="w-full max-h-72 object-cover"
+								className="w-full max-h-56 sm:max-h-72 object-cover"
 								unoptimized
 							/>
 							<div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -636,7 +636,7 @@ export default function NewPostPage() {
 						<button
 							type="button"
 							onClick={() => imageInputRef.current?.click()}
-							className="flex w-full flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed border-gray-200 bg-gray-50/50 px-6 py-12 transition-all hover:border-primary-300 hover:bg-primary-50/30 active:scale-[0.99]"
+							className="flex w-full flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed border-gray-200 bg-gray-50/50 px-6 py-10 sm:py-12 transition-all hover:border-primary-300 hover:bg-primary-50/30 active:scale-[0.99]"
 						>
 							<div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-100 text-primary-600">
 								<Upload className="h-6 w-6" />
