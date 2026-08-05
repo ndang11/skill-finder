@@ -1,6 +1,6 @@
 // components/layout/Footer.tsx
 
-import { Mail, MapPin, Phone } from "lucide-react";
+import { Heart, Mail, MapPin, Phone } from "lucide-react";
 import Link from "next/link";
 
 export default function Footer() {
@@ -99,7 +99,11 @@ export default function Footer() {
 					<p className="text-xs text-gray-500">
 						© {new Date().getFullYear()} Skill Finder. All rights reserved.
 					</p>
-					<p className="text-xs text-gray-500">Made with ❤️ in Cameroon</p>
+					<p className="text-xs text-gray-500 flex items-center gap-1">
+						Made with{" "}
+						<Heart className="h-3.5 w-3.5 text-red-500 fill-red-500 inline-block" />{" "}
+						in Cameroon
+					</p>
 				</div>
 			</div>
 		</footer>

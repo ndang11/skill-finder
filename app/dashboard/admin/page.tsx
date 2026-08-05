@@ -1,6 +1,15 @@
 "use client";
 
 import type { User } from "@supabase/supabase-js";
+import {
+	AlertTriangle,
+	BarChart2,
+	CheckCircle2,
+	ClipboardList,
+	Shield,
+	Users,
+	Wrench,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import PostList from "@/components/feed/PostList";
@@ -104,7 +113,7 @@ export default function AdminDashboardPage() {
 							All Platform Posts
 						</h2>
 						<span className="inline-flex items-center gap-1.5 text-xs font-semibold text-orange-600 bg-orange-50 px-3 py-1 rounded-full border border-orange-100">
-							🛡️ Moderation View
+							<Shield className="h-3.5 w-3.5" /> Moderation View
 						</span>
 					</div>
 
@@ -128,17 +137,17 @@ export default function AdminDashboardPage() {
 					<Card className="p-5 space-y-3">
 						<h3 className="text-sm font-black text-gray-900">Moderation</h3>
 						<Button
-							className="w-full text-sm h-10"
+							className="w-full text-sm h-10 flex items-center gap-2"
 							onClick={() => router.push("/dashboard/admin/verifications")}
 						>
-							✅ Review Verifications
+							<CheckCircle2 className="h-4 w-4" /> Review Verifications
 						</Button>
 						<Button
 							variant="secondary"
-							className="w-full text-sm h-10"
+							className="w-full text-sm h-10 flex items-center gap-2"
 							onClick={() => router.push("/dashboard/admin/posts")}
 						>
-							📋 All Posts
+							<ClipboardList className="h-4 w-4" /> All Posts
 						</Button>
 					</Card>
 
@@ -146,31 +155,31 @@ export default function AdminDashboardPage() {
 						<h3 className="text-sm font-black text-gray-900">Management</h3>
 						<Button
 							variant="outline"
-							className="w-full text-sm h-10"
+							className="w-full text-sm h-10 flex items-center gap-2"
 							onClick={() => router.push("/dashboard/admin/users")}
 						>
-							👥 Manage Users
+							<Users className="h-4 w-4" /> Manage Users
 						</Button>
 						<Button
 							variant="outline"
-							className="w-full text-sm h-10"
+							className="w-full text-sm h-10 flex items-center gap-2"
 							onClick={() => router.push("/dashboard/admin/professionals")}
 						>
-							🛠️ Professionals
+							<Wrench className="h-4 w-4" /> Professionals
 						</Button>
 						<Button
 							variant="outline"
-							className="w-full text-sm h-10"
+							className="w-full text-sm h-10 flex items-center gap-2"
 							onClick={() => router.push("/dashboard/admin/analytics")}
 						>
-							📊 View Analytics
+							<BarChart2 className="h-4 w-4" /> View Analytics
 						</Button>
 					</Card>
 
 					{/* Admin Info Card */}
 					<Card className="p-5 bg-gradient-to-br from-orange-50 to-red-50 border-orange-100">
-						<h3 className="text-sm font-black text-orange-900 mb-2">
-							⚠️ Moderation
+						<h3 className="text-sm font-black text-orange-900 mb-2 flex items-center gap-1.5">
+							<AlertTriangle className="h-4 w-4" /> Moderation
 						</h3>
 						<p className="text-xs text-orange-700 leading-relaxed">
 							Flagged or inappropriate posts can be removed using the delete

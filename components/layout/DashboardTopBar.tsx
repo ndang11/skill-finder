@@ -2,13 +2,24 @@
 "use client";
 
 import type { User } from "@supabase/supabase-js";
+import {
+	Bookmark,
+	Globe,
+	HelpCircle,
+	Image as ImageIcon,
+	MapPin,
+	Newspaper,
+	Search,
+	Settings,
+	Star,
+	User as UserIcon,
+	Wrench,
+} from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import * as React from "react";
-import {
-	SKILL_CATEGORIES,
-	SKILL_CATEGORY_EMOJIS,
-} from "@/constants/categories";
+import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
+import { CATEGORY_ICONS, SKILL_CATEGORIES } from "@/constants/categories";
 import { CAMEROON_REGIONS } from "@/constants/regions";
 import { useDebounce } from "@/hooks/useDebounce";
 import { supabase } from "@/utils/supabase/client";
@@ -17,7 +28,7 @@ interface SearchResult {
 	type: "category" | "professional" | "page";
 	label: string;
 	sublabel?: string;
-	emoji?: string;
+	icon: React.ComponentType<{ className?: string }>;
 	href: string;
 }
 
@@ -26,56 +37,56 @@ const STATIC_RESULTS: SearchResult[] = [
 		type: "category" as const,
 		label: cat,
 		sublabel: "Browse professionals",
-		emoji: SKILL_CATEGORY_EMOJIS[cat] ?? "🛠️",
+		icon: CATEGORY_ICONS[cat] ?? Wrench,
 		href: `/search?category=${encodeURIComponent(cat)}`,
 	})),
 	{
 		type: "page",
 		label: "Find Professionals",
 		sublabel: "Search & filter",
-		emoji: "🔍",
+		icon: Search,
 		href: "/search",
 	},
 	{
 		type: "page",
 		label: "Feed",
 		sublabel: "Recent updates",
-		emoji: "📰",
+		icon: Newspaper,
 		href: "/feed",
 	},
 	{
 		type: "page",
 		label: "My Profile",
 		sublabel: "Edit your details",
-		emoji: "👤",
+		icon: UserIcon,
 		href: "/dashboard/professional/profile",
 	},
 	{
 		type: "page",
 		label: "Portfolio",
 		sublabel: "Manage work showcase",
-		emoji: "🖼️",
+		icon: ImageIcon,
 		href: "/dashboard/professional/portfolio",
 	},
 	{
 		type: "page",
 		label: "My Reviews",
 		sublabel: "Customer feedback",
-		emoji: "⭐",
+		icon: Star,
 		href: "/dashboard/customer/reviews",
 	},
 	{
 		type: "page",
 		label: "Bookmarks",
 		sublabel: "Saved professionals",
-		emoji: "🔖",
+		icon: Bookmark,
 		href: "/dashboard/customer/bookmarks",
 	},
 	{
 		type: "page",
 		label: "Settings",
 		sublabel: "Account settings",
-		emoji: "⚙️",
+		icon: Settings,
 		href: "/dashboard/professional/settings",
 	},
 ];
@@ -371,7 +382,10 @@ export default function DashboardTopBar() {
 												}}
 												className="w-full text-left px-4 py-2 text-xs font-bold text-primary-600 hover:bg-gray-50 flex items-center justify-between"
 											>
-												<span>🇨🇲 All Cameroon</span>
+												<span className="flex items-center gap-1.5">
+													<MapPin className="h-3.5 w-3.5 text-primary-600" />{" "}
+													All Cameroon
+												</span>
 												{!selectedCity && <span>✓</span>}
 											</button>
 
@@ -437,8 +451,8 @@ export default function DashboardTopBar() {
 																	: "hover:bg-gray-50"
 															}`}
 														>
-															<span className="w-8 h-8 flex-shrink-0 flex items-center justify-center rounded-xl bg-gray-100 text-base">
-																{result.emoji}
+															<span className="w-8 h-8 flex-shrink-0 flex items-center justify-center rounded-xl bg-gray-100 text-gray-500">
+																<result.icon className="h-4 w-4" />
 															</span>
 
 															<div className="flex-1 min-w-0">
@@ -491,8 +505,8 @@ export default function DashboardTopBar() {
 										</div>
 									</>
 								) : (
-									<div className="px-5 py-6 text-center">
-										<p className="text-2xl mb-1">🤔</p>
+									<div className="px-5 py-6 text-center flex flex-col items-center justify-center">
+										<HelpCircle className="h-8 w-8 text-gray-400 mb-2" />
 										<p className="text-sm font-semibold text-gray-700">
 											No results for &ldquo;{query}&rdquo;
 										</p>
@@ -516,8 +530,9 @@ export default function DashboardTopBar() {
 							</div>
 						)}
 					</div>
-					{/* Right side: quick link to full search + Profile Icon */}
+					{/* Right side: quick link to full search + Language + Profile Icon */}
 					<div className="flex items-center gap-3">
+						<LanguageSwitcher />
 						<a
 							href="/search"
 							className="hidden sm:flex items-center gap-1.5 text-xs font-semibold text-gray-500 hover:text-primary-600 transition-colors whitespace-nowrap"

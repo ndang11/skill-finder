@@ -2,6 +2,7 @@
 "use client";
 
 import { useFormik } from "formik";
+import { User, Wrench } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import * as React from "react";
@@ -194,13 +195,15 @@ export const RegisterForm = () => {
 				<button
 					type="button"
 					onClick={() => formik.setFieldValue("role", "customer")}
-					className={`p-4 rounded-xl border text-center transition-all ${
+					className={`p-4 rounded-xl border text-center transition-all flex flex-col items-center justify-center ${
 						formik.values.role === "customer"
 							? "border-primary-500 bg-primary-50 ring-2 ring-primary-100"
 							: "border-gray-200 bg-white hover:bg-gray-50"
 					}`}
 				>
-					<span className="text-2xl block mb-1">🔍</span>
+					<User
+						className={`h-6 w-6 mb-1.5 ${formik.values.role === "customer" ? "text-primary-600" : "text-gray-400"}`}
+					/>
 					<span
 						className={`text-sm font-bold block ${
 							formik.values.role === "customer"
@@ -215,13 +218,15 @@ export const RegisterForm = () => {
 				<button
 					type="button"
 					onClick={() => formik.setFieldValue("role", "professional")}
-					className={`p-4 rounded-xl border text-center transition-all ${
+					className={`p-4 rounded-xl border text-center transition-all flex flex-col items-center justify-center ${
 						formik.values.role === "professional"
 							? "border-primary-500 bg-primary-50 ring-2 ring-primary-100"
 							: "border-gray-200 bg-white hover:bg-gray-50"
 					}`}
 				>
-					<span className="text-2xl block mb-1">🛠️</span>
+					<Wrench
+						className={`h-6 w-6 mb-1.5 ${formik.values.role === "professional" ? "text-primary-600" : "text-gray-400"}`}
+					/>
 					<span
 						className={`text-sm font-bold block ${
 							formik.values.role === "professional"

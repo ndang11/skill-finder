@@ -1,5 +1,6 @@
 "use client";
 
+import { AlertCircle, X } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Textarea } from "@/components/ui/Textarea";
@@ -84,7 +85,7 @@ export default function WriteReviewModal({
 					className="absolute top-4 right-4 p-2 rounded-xl text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors"
 					aria-label="Close modal"
 				>
-					✕
+					<X className="h-4 w-4" />
 				</button>
 
 				{/* Header */}
@@ -98,8 +99,9 @@ export default function WriteReviewModal({
 				</div>
 
 				{error && (
-					<div className="rounded-xl border border-red-200 bg-red-50 p-3 text-xs font-medium text-red-700">
-						⚠️ {error}
+					<div className="rounded-xl border border-red-200 bg-red-50 p-3 flex items-start gap-2 text-xs font-medium text-red-700">
+						<AlertCircle className="h-4 w-4 flex-shrink-0 mt-0.5" />
+						<span>{error}</span>
 					</div>
 				)}
 

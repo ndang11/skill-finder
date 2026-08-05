@@ -1,6 +1,14 @@
 "use client";
 
 import type { User } from "@supabase/supabase-js";
+import {
+	AlertTriangle,
+	Calendar,
+	Image as ImageIcon,
+	Lightbulb,
+	Megaphone,
+	Plus,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
@@ -129,17 +137,18 @@ export default function PortfolioPage() {
 					</p>
 				</div>
 				<Button
-					className="flex-shrink-0 h-10 px-5 text-sm w-auto"
+					className="flex-shrink-0 h-10 px-5 text-sm w-auto flex items-center gap-2"
 					onClick={() => router.push("/dashboard/professional/posts/new")}
 				>
-					+ Add Work
+					<Plus className="h-4 w-4" /> Add Work
 				</Button>
 			</div>
 
 			{/* Error Message */}
 			{error && (
-				<div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
-					⚠️ {error}
+				<div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700 flex items-center gap-2">
+					<AlertTriangle className="h-4 w-4 flex-shrink-0" />
+					<span>{error}</span>
 				</div>
 			)}
 
@@ -172,7 +181,7 @@ export default function PortfolioPage() {
 									onClick={() => setSelectedItem(item)}
 									className="w-full aspect-[4/3] bg-gradient-to-br from-primary-50 to-green-50 flex items-center justify-center cursor-pointer"
 								>
-									<span className="text-5xl opacity-40">🖼️</span>
+									<ImageIcon className="h-12 w-12 text-primary-300 opacity-60" />
 								</button>
 							)}
 
@@ -191,13 +200,23 @@ export default function PortfolioPage() {
 									<div className="flex items-center gap-3">
 										{/* Post Type Badge */}
 										<span className="inline-flex items-center gap-1 rounded-full bg-primary-50 px-2.5 py-0.5 text-[10px] font-bold text-primary-700 uppercase tracking-wide">
-											{item.postType === "showcase"
-												? "🖼️ Showcase"
-												: item.postType === "tip"
-													? "💡 Tip"
-													: item.postType === "availability"
-														? "📅 Available"
-														: "📢 Update"}
+											{item.postType === "showcase" ? (
+												<>
+													<ImageIcon className="h-3 w-3" /> Showcase
+												</>
+											) : item.postType === "tip" ? (
+												<>
+													<Lightbulb className="h-3 w-3" /> Tip
+												</>
+											) : item.postType === "availability" ? (
+												<>
+													<Calendar className="h-3 w-3" /> Available
+												</>
+											) : (
+												<>
+													<Megaphone className="h-3 w-3" /> Update
+												</>
+											)}
 										</span>
 										{/* Like Count */}
 										{item.likes.length > 0 && (
@@ -255,7 +274,7 @@ export default function PortfolioPage() {
 				<Card className="p-12 text-center">
 					<div className="mx-auto max-w-sm space-y-5">
 						<div className="mx-auto flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-primary-50 to-green-50 border border-primary-100 shadow-sm">
-							<span className="text-4xl">🖼️</span>
+							<ImageIcon className="h-10 w-10 text-primary-400" />
 						</div>
 						<div className="space-y-2">
 							<h3 className="text-xl font-black text-gray-900">

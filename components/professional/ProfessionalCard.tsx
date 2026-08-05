@@ -4,7 +4,7 @@
 import { Briefcase, MapPin, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { SKILL_CATEGORY_EMOJIS } from "@/constants/categories";
+import { CATEGORY_ICONS } from "@/constants/categories";
 import type { Professional } from "@/types/professional.types";
 
 interface ProfessionalCardProps {
@@ -38,7 +38,7 @@ export default function ProfessionalCard({
 	} = professional;
 	const displayName = fullName || FALLBACK_NAME;
 
-	const fallbackEmoji = SKILL_CATEGORY_EMOJIS[category] ?? "🛠️";
+	const CategoryIcon = CATEGORY_ICONS[category] || CATEGORY_ICONS.Other;
 
 	return (
 		<Link
@@ -77,8 +77,8 @@ export default function ProfessionalCard({
 					</div>
 
 					<div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500">
-						<span className="flex items-center gap-1 font-medium text-primary-600">
-							{fallbackEmoji}
+						<span className="flex items-center gap-1.5 font-medium text-primary-600">
+							<CategoryIcon className="h-3.5 w-3.5 text-primary-600" />
 							{category}
 						</span>
 						<span className="flex items-center gap-1">

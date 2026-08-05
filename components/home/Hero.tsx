@@ -1,14 +1,25 @@
 // components/home/Hero.tsx
 "use client";
 
-import { Search, Shield, Star, Users } from "lucide-react";
+import {
+	Award,
+	Search,
+	Shield,
+	ShieldCheck,
+	Star,
+	Trophy,
+	Users,
+} from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
+import { useTranslation } from "@/context/LanguageContext";
 
 const HERO_IMAGE =
 	"https://english.news.cn/20230126/9ddb949d81d441a5bfca9fd8cf25c719/202301269ddb949d81d441a5bfca9fd8cf25c719_67bf09c0-a6da-4707-8148-767eeb6214ed.jpg";
 
 export const Hero = () => {
+	const { t } = useTranslation();
+
 	return (
 		<section
 			className="relative overflow-hidden bg-cover bg-center bg-no-repeat"
@@ -25,21 +36,19 @@ export const Hero = () => {
 					{/* Left Column: Headline and Action */}
 					<div className="lg:col-span-7 text-left space-y-6 lg:pr-6">
 						<span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 backdrop-blur-md px-3.5 py-1.5 text-xs sm:text-sm font-semibold text-primary-300 border border-white/20">
-							🇨🇲 The #1 Artisan Directory in Cameroon
+							🇨🇲 {t("hero.badge")}
 						</span>
 
 						<h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-[1.1]">
-							Find Trusted{" "}
+							{t("hero.titleStart")}{" "}
 							<span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-green-400">
-								Professionals
+								{t("hero.titleHighlight")}
 							</span>{" "}
-							Anywhere in Cameroon.
+							{t("hero.titleEnd")}
 						</h1>
 
 						<p className="text-base sm:text-lg text-gray-300 max-w-xl leading-relaxed">
-							Connect directly with verified mechanics, electricians, plumbers,
-							and artisans near you. Skip the stress, check ratings, and hire
-							instantly via WhatsApp.
+							{t("hero.subtitle")}
 						</p>
 
 						{/* CTA Buttons */}
@@ -47,7 +56,7 @@ export const Hero = () => {
 							<Link href="/search">
 								<Button className="w-full sm:w-auto text-base font-bold h-12 px-8 shadow-lg shadow-primary-500/20 bg-primary-500 hover:bg-primary-600 text-white">
 									<Search className="h-5 w-5 mr-2" />
-									Find Professionals
+									{t("hero.ctaSearch")}
 								</Button>
 							</Link>
 							<Link href="/categories">
@@ -200,7 +209,9 @@ export const Hero = () => {
 
 						{/* Floating Badges */}
 						<div className="absolute top-10 -left-4 sm:-left-6 bg-white shadow-xl shadow-gray-200/50 px-3 py-2 sm:px-4 sm:py-2.5 rounded-2xl flex items-center gap-2 border border-gray-50/80">
-							<span className="text-lg sm:text-xl">🏆</span>
+							<div className="flex h-8 w-8 items-center justify-center rounded-xl bg-amber-50">
+								<Trophy className="h-4 w-4 text-amber-500" />
+							</div>
 							<div>
 								<p className="text-xs font-bold text-gray-900">Top Rated</p>
 								<p className="text-[10px] text-gray-400 font-semibold hidden sm:block">
@@ -210,7 +221,9 @@ export const Hero = () => {
 						</div>
 
 						<div className="absolute bottom-12 -right-2 sm:-right-4 bg-white shadow-xl shadow-gray-200/50 px-3 py-2 sm:px-4 sm:py-2.5 rounded-2xl flex items-center gap-2 border border-gray-50/80">
-							<span className="text-lg sm:text-xl">🛡️</span>
+							<div className="flex h-8 w-8 items-center justify-center rounded-xl bg-primary-50">
+								<ShieldCheck className="h-4 w-4 text-primary-600" />
+							</div>
 							<div>
 								<p className="text-xs font-bold text-gray-900">100% Secure</p>
 								<p className="text-[10px] text-gray-400 font-semibold hidden sm:block">

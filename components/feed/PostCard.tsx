@@ -1,8 +1,10 @@
 // components/feed/PostCard.tsx
 "use client";
 
+import { Wrench } from "lucide-react";
 import Link from "next/link";
 import * as React from "react";
+import { CATEGORY_ICONS } from "@/constants/categories";
 import type { Post } from "@/types/post.types";
 import { cn } from "@/utils/cn";
 
@@ -18,24 +20,6 @@ function timeAgo(dateString: string): string {
 		day: "numeric",
 		month: "short",
 	});
-}
-
-function categoryEmoji(category: string): string {
-	const map: Record<string, string> = {
-		"Solar Installer": "☀️",
-		Electrician: "⚡",
-		Plumber: "🔧",
-		Mechanic: "🔩",
-		Carpenter: "🪵",
-		"Mason/Bricklayer": "🏗️",
-		Painter: "🎨",
-		Welder: "🔥",
-		Hairdresser: "💇",
-		"Tailor/Fashion Designer": "👗",
-		"AC Technician": "❄️",
-		Other: "🛠️",
-	};
-	return map[category] || "🛠️";
 }
 
 interface PostCardProps {
@@ -161,7 +145,13 @@ export default function PostCard({
 							</span>
 						</div>
 						<p className="text-xs text-gray-500 truncate">
-							{categoryEmoji(post.authorCategory)} {post.authorCategory}
+							{(() => {
+								const IconComp = CATEGORY_ICONS[post.authorCategory] || Wrench;
+								return (
+									<IconComp className="inline h-3.5 w-3.5 mr-1 text-primary-500" />
+								);
+							})()}
+							{post.authorCategory}
 							{post.authorLocation ? ` · ${post.authorLocation}` : ""}
 						</p>
 					</div>

@@ -1,12 +1,13 @@
 "use client";
 
 import type { User } from "@supabase/supabase-js";
+import { FileText, MapPin, Pencil, Wrench } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
-import { SKILL_CATEGORY_EMOJIS } from "@/constants/categories";
+import { CATEGORY_ICONS } from "@/constants/categories";
 import { professionalService } from "@/services/professional.service";
 import type { Professional } from "@/types/professional.types";
 import { supabase } from "@/utils/supabase/client";
@@ -82,20 +83,24 @@ export default function ProfilePage() {
 						{profile && (
 							<div className="mt-3 flex flex-wrap items-center justify-center sm:justify-start gap-2">
 								<span className="inline-flex items-center gap-1.5 rounded-full bg-primary-50 px-3 py-1 text-xs font-bold text-primary-700">
-									<span>{SKILL_CATEGORY_EMOJIS[profile.category] || "🛠️"}</span>
+									{(() => {
+										const Icon = CATEGORY_ICONS[profile.category] || Wrench;
+										return <Icon className="h-3.5 w-3.5" />;
+									})()}
 									{profile.category || "Uncategorized"}
 								</span>
-								<span className="inline-flex items-center gap-1 rounded-full bg-gray-100 px-3 py-1 text-xs font-bold text-gray-600">
-									📍 {profile.location || "No location set"}
+								<span className="inline-flex items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1 text-xs font-bold text-gray-600">
+									<MapPin className="h-3.5 w-3.5 text-gray-400" />
+									{profile.location || "No location set"}
 								</span>
 							</div>
 						)}
 					</div>
 					<Button
-						className="w-full sm:w-auto flex-shrink-0"
+						className="w-full sm:w-auto flex-shrink-0 flex items-center gap-2"
 						onClick={() => router.push("/dashboard/professional/settings")}
 					>
-						✏️ Edit Profile
+						<Pencil className="h-4 w-4" /> Edit Profile
 					</Button>
 				</div>
 			</Card>
@@ -108,7 +113,9 @@ export default function ProfilePage() {
 
 			{!profile && !error && (
 				<Card className="p-8 text-center">
-					<p className="text-2xl mb-2">📝</p>
+					<div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-50 mb-3">
+						<FileText className="h-7 w-7 text-primary-400" />
+					</div>
 					<h2 className="text-lg font-black text-gray-900">No profile yet</h2>
 					<p className="mt-1 text-sm text-gray-500">
 						Complete your profile to start receiving customer requests.

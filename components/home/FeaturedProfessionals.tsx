@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Skeleton } from "@/components/ui/Skeleton";
-import { SKILL_CATEGORY_EMOJIS } from "@/constants/categories";
+import { CATEGORY_ICONS } from "@/constants/categories";
 import { professionalService } from "@/services/professional.service";
 import type { Professional } from "@/types/professional.types";
 
@@ -111,8 +111,15 @@ export default function FeaturedProfessionals() {
 										</div>
 
 										<div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500">
-											<span className="flex items-center gap-1 font-medium text-primary-600">
-												{SKILL_CATEGORY_EMOJIS[professional.category] ?? "🛠️"}
+											<span className="flex items-center gap-1.5 font-medium text-primary-600">
+												{(() => {
+													const IconComponent =
+														CATEGORY_ICONS[professional.category] ||
+														CATEGORY_ICONS.Other;
+													return (
+														<IconComponent className="h-3.5 w-3.5 text-primary-600" />
+													);
+												})()}
 												{professional.category}
 											</span>
 											<span className="flex items-center gap-1">

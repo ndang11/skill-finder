@@ -1,6 +1,7 @@
 // components/feed/PostList.tsx
 "use client";
 
+import { Inbox } from "lucide-react";
 import PostCard from "@/components/feed/PostCard";
 import { PostCardSkeleton } from "@/components/ui/Skeleton";
 import type { Post } from "@/types/post.types";
@@ -62,7 +63,9 @@ export default function PostList({
 	if (posts.length === 0) {
 		return (
 			<div className="rounded-2xl border border-gray-200 bg-white p-10 text-center">
-				<p className="text-4xl mb-3">📭</p>
+				<div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-gray-100 mb-3">
+					<Inbox className="h-8 w-8 text-gray-400" />
+				</div>
 				<p className="text-gray-700 font-semibold text-sm">{emptyMessage}</p>
 				<p className="text-gray-400 text-xs mt-1">
 					Check back soon for new updates from professionals.

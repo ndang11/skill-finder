@@ -1,6 +1,7 @@
 "use client";
 
 import type { User } from "@supabase/supabase-js";
+import { AlertTriangle, Star, Wrench } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -161,8 +162,9 @@ export default function ProfessionalReviewsPage() {
 			</div>
 
 			{error && (
-				<div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
-					⚠️ {error}
+				<div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700 flex items-center gap-2">
+					<AlertTriangle className="h-4 w-4 flex-shrink-0" />
+					<span>{error}</span>
 				</div>
 			)}
 
@@ -174,11 +176,11 @@ export default function ProfessionalReviewsPage() {
 						<p className="text-xs font-bold uppercase tracking-wider text-gray-400">
 							Overall Rating
 						</p>
-						<div className="mt-2 flex items-center justify-center gap-2">
+						<div className="mt-2 flex items-center justify-center gap-1.5">
 							<span className="text-5xl font-black text-gray-900">
 								{stats.averageRating > 0 ? stats.averageRating : "N/A"}
 							</span>
-							<span className="text-3xl text-amber-400">★</span>
+							<Star className="h-7 w-7 fill-amber-400 text-amber-400" />
 						</div>
 						<div className="mt-2 flex items-center justify-center gap-1">
 							{[1, 2, 3, 4, 5].map((star) => (
@@ -218,8 +220,9 @@ export default function ProfessionalReviewsPage() {
 									key={ratingKey}
 									className="flex items-center gap-3 text-xs"
 								>
-									<span className="w-12 font-bold text-gray-600 flex items-center gap-1">
-										{ratingKey} <span className="text-amber-400">★</span>
+									<span className="w-16 font-bold text-gray-600 flex items-center gap-1">
+										{ratingKey}{" "}
+										<Star className="h-3 w-3 fill-amber-400 text-amber-400" />
 									</span>
 									<div className="flex-1 h-2.5 rounded-full bg-gray-100 overflow-hidden">
 										<div
@@ -267,7 +270,7 @@ export default function ProfessionalReviewsPage() {
 								}`}
 							>
 								<span>{star}</span>
-								<span className="text-amber-400">★</span>
+								<Star className="h-4 w-4 fill-amber-400 text-amber-400" />
 								<span className="text-[10px] opacity-75">({count})</span>
 							</button>
 						);
@@ -350,8 +353,9 @@ export default function ProfessionalReviewsPage() {
 
 							{/* Skill Badge */}
 							<div>
-								<span className="inline-block rounded-md bg-gray-100 px-2.5 py-0.5 text-xs font-semibold text-gray-700">
-									🛠️ {rev.skillTitle}
+								<span className="inline-block rounded-md bg-gray-100 px-2.5 py-0.5 text-xs font-semibold text-gray-700 flex items-center gap-1">
+									<Wrench className="h-3 w-3 text-gray-500" />
+									{rev.skillTitle}
 								</span>
 							</div>
 
@@ -366,8 +370,8 @@ export default function ProfessionalReviewsPage() {
 				/* Empty State */
 				<Card className="p-12 text-center">
 					<div className="mx-auto max-w-sm space-y-4">
-						<div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-50 border border-amber-100 text-3xl">
-							⭐
+						<div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-50 border border-amber-100">
+							<Star className="h-8 w-8 fill-amber-400 text-amber-400" />
 						</div>
 						<h3 className="text-lg font-bold text-gray-900">
 							{searchQuery || ratingFilter !== "all"

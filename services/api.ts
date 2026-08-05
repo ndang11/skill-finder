@@ -17,6 +17,12 @@ export async function apiRequest<T>(
 		headers.set("Authorization", `Bearer ${session.access_token}`);
 	}
 
+	// Attach user language for backend localization
+	if (typeof window !== "undefined") {
+		const currentLang = localStorage.getItem("skill_finder_lang") || "en";
+		headers.set("Accept-Language", currentLang);
+	}
+
 	if (!headers.has("Content-Type") && !(options.body instanceof FormData)) {
 		headers.set("Content-Type", "application/json");
 	}

@@ -4,12 +4,15 @@
 import { LogOut, Menu, Search, type User, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
 import { Button } from "@/components/ui/Button";
+import { useTranslation } from "@/context/LanguageContext";
 import { supabase } from "@/utils/supabase/client";
 
 export default function Header() {
 	const [user, setUser] = useState<User | null>(null);
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+	const { t } = useTranslation();
 
 	useEffect(() => {
 		supabase.auth.getUser().then(({ data }) => {
@@ -24,9 +27,9 @@ export default function Header() {
 	};
 
 	const navLinks = [
-		{ href: "/search", label: "Find Professionals" },
-		{ href: "/categories", label: "Categories" },
-		{ href: "/feed", label: "Feed" },
+		{ href: "/search", label: t("nav.findPros") },
+		{ href: "/categories", label: t("categories.title") },
+		{ href: "/feed", label: t("nav.feed") },
 	];
 
 	return (
@@ -56,20 +59,21 @@ export default function Header() {
 						))}
 					</nav>
 
-					{/* Desktop Auth */}
+					{/* Desktop Auth & Language */}
 					<div className="hidden md:flex items-center gap-3">
+						<LanguageSwitcher />
 						{user ? (
 							<>
 								<Link href="/dashboard/professional">
 									<Button variant="secondary" className="h-9 px-4 text-sm">
-										Dashboard
+										{t("nav.dashboard")}
 									</Button>
 								</Link>
 								<button
 									type="button"
 									onClick={handleLogout}
 									className="flex h-9 w-9 items-center justify-center rounded-xl text-gray-500 hover:text-red-600 hover:bg-red-50 transition-all"
-									title="Log out"
+									title={t("nav.logout")}
 								>
 									<LogOut className="h-4 w-4" />
 								</button>
@@ -78,15 +82,15 @@ export default function Header() {
 							<>
 								<Link href="/login">
 									<Button
-										variant="ghost"
+										variant="outline"
 										className="h-9 px-4 text-sm font-semibold text-gray-700 hover:text-primary-600 hover:bg-primary-50"
 									>
-										Log in
+										{t("nav.login")}
 									</Button>
 								</Link>
 								<Link href="/register">
 									<Button className="h-9 px-5 text-sm font-semibold shadow-sm">
-										Get Started
+										{t("nav.register")}
 									</Button>
 								</Link>
 							</>
