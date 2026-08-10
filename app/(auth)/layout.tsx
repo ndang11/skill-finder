@@ -20,14 +20,14 @@ export default function AuthLayout({
 			<div className="hidden lg:flex lg:col-span-5 relative flex-col justify-between p-12 text-white overflow-hidden">
 				{/* Background photo */}
 				<Image
-					src="/auth-bg.jpg"
+					src="https://african.land/oc-content/uploads/2/1434.jpg"
 					alt="Cameroonian professionals at work"
 					fill
 					className="object-cover object-center"
 					priority
 				/>
-				{/* Dark emerald gradient overlay */}
-				<div className="absolute inset-0 bg-gradient-to-br from-emerald-950/90 via-emerald-900/70 to-emerald-950/50" />
+				{/* Subtle gradient overlay */}
+				<div className="absolute inset-0 bg-gradient-to-br from-emerald-950/70 via-emerald-900/50 to-emerald-950/40" />
 
 				{/* Logo */}
 				<Link
