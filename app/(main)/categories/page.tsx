@@ -177,16 +177,6 @@ export default function CategoriesPage() {
 								)}
 							</div>
 						</div>
-
-						{/* Find Professionals CTA */}
-						<div className="mt-4">
-							<Link href="/search">
-								<Button className="bg-primary-500 hover:bg-primary-600 text-white shadow-lg shadow-primary-500/20 h-12 px-8 text-base font-bold">
-									<Search className="h-5 w-5 mr-2" />
-									Find Professionals
-								</Button>
-							</Link>
-						</div>
 					</div>
 				</section>
 
