@@ -4,8 +4,11 @@
 import { Search, Zap } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
+import { useTranslation } from "@/context/LanguageContext";
 
 export default function CallToAction() {
+	const { t } = useTranslation();
+
 	return (
 		<section className="py-16 lg:py-24 bg-white">
 			<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -19,18 +22,15 @@ export default function CallToAction() {
 					<div className="relative z-10 max-w-2xl mx-auto space-y-6">
 						<div className="flex items-center justify-center gap-2 text-white/90 text-sm font-semibold">
 							<Zap className="h-5 w-5" />
-							<span>Ready to get started?</span>
+							<span>{t("home.popularServices")}</span>
 						</div>
 
 						<h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-[1.1]">
-							Your Next Project{" "}
-							<span className="text-primary-100">Starts Here</span>
+							{t("home.ctaTitle")}
 						</h2>
 
 						<p className="text-base sm:text-lg text-primary-50 leading-relaxed max-w-xl mx-auto">
-							Join thousands of Cameroonians who trust Skill Finder to connect
-							with reliable professionals. Sign up today and post your first
-							request.
+							{t("home.ctaSubtitle")}
 						</p>
 
 						<div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
@@ -39,7 +39,7 @@ export default function CallToAction() {
 									variant="secondary"
 									className="w-full sm:w-auto text-base font-bold h-12 px-8 shadow-lg"
 								>
-									Create Free Account
+									{t("nav.register")}
 								</Button>
 							</Link>
 							<Link href="/search">
@@ -48,7 +48,7 @@ export default function CallToAction() {
 									className="w-full sm:w-auto text-base font-bold h-12 px-8 border-white/30 text-white hover:bg-white/10 hover:text-white"
 								>
 									<Search className="h-5 w-5 mr-2" />
-									Browse Professionals
+									{t("nav.findPros")}
 								</Button>
 							</Link>
 						</div>

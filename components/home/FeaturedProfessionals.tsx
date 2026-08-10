@@ -6,7 +6,8 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Skeleton } from "@/components/ui/Skeleton";
-import { CATEGORY_ICONS } from "@/constants/categories";
+import { CAMEROON_SKILLS } from "@/constants/categories";
+import { useTranslation } from "@/context/LanguageContext";
 import { professionalService } from "@/services/professional.service";
 import type { Professional } from "@/types/professional.types";
 
@@ -34,6 +35,7 @@ function ProfessionalCardSkeleton() {
 }
 
 export default function FeaturedProfessionals() {
+	const { language, t } = useTranslation();
 	const [professionals, setProfessionals] = useState<Professional[]>([]);
 	const [loading, setLoading] = useState(true);
 
@@ -56,14 +58,24 @@ export default function FeaturedProfessionals() {
 			<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 				<div className="text-center max-w-2xl mx-auto mb-12 lg:mb-16">
 					<h2 className="text-3xl sm:text-4xl font-black text-gray-900 tracking-tight">
-						Featured{" "}
-						<span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-500 to-green-600">
-							Professionals
-						</span>
+						{language === "fr" ? (
+							<>
+								Professionnels{" "}
+								<span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-500 to-green-600">
+									à la Une
+								</span>
+							</>
+						) : (
+							<>
+								Featured{" "}
+								<span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-500 to-green-600">
+									Professionals
+								</span>
+							</>
+						)}
 					</h2>
 					<p className="mt-4 text-base sm:text-lg text-gray-600 leading-relaxed">
-						Top-rated experts ready to help. Browse our handpicked selection of
-						trusted professionals across Cameroon.
+						{t("home.featuredSubtitle")}
 					</p>
 				</div>
 
@@ -73,7 +85,7 @@ export default function FeaturedProfessionals() {
 							<ProfessionalCardSkeleton key={i} />
 						))}
 					</div>
-				) : (
+				) : professionals.length > 0 ? (
 					<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
 						{professionals.map((professional) => (
 							<Link
@@ -113,14 +125,23 @@ export default function FeaturedProfessionals() {
 										<div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500">
 											<span className="flex items-center gap-1.5 font-medium text-primary-600">
 												{(() => {
+													const localSkill = CAMEROON_SKILLS.find(
+														(s) =>
+															s.name.toLowerCase() ===
+															professional.category.toLowerCase(),
+													);
 													const IconComponent =
-														CATEGORY_ICONS[professional.category] ||
-														CATEGORY_ICONS.Other;
+														localSkill?.icon || CAMEROON_SKILLS[0].icon;
+
 													return (
-														<IconComponent className="h-3.5 w-3.5 text-primary-600" />
+														<>
+															<IconComponent className="h-3.5 w-3.5 text-primary-600" />
+															{language === "fr"
+																? localSkill?.nameFr || professional.category
+																: professional.category}
+														</>
 													);
 												})()}
-												{professional.category}
 											</span>
 											<span className="flex items-center gap-1">
 												<MapPin className="h-3 w-3 text-gray-400" />
@@ -158,13 +179,19 @@ export default function FeaturedProfessionals() {
 												<span>{professional.averageRating.toFixed(1)}</span>
 											</div>
 											<span className="text-[11px] font-semibold text-primary-600 group-hover:underline">
-												View Profile →
+												{language === "fr"
+													? "Voir le profil →"
+													: "View Profile →"}
 											</span>
 										</div>
 									</div>
 								</div>
 							</Link>
 						))}
+					</div>
+				) : (
+					<div className="text-center py-12 text-gray-500 text-sm font-semibold">
+						{t("home.noFeatured")}
 					</div>
 				)}
 
@@ -174,7 +201,9 @@ export default function FeaturedProfessionals() {
 							variant="outline"
 							className="px-8 h-11 text-sm font-semibold"
 						>
-							View All Professionals
+							{language === "fr"
+								? "Voir tous les professionnels"
+								: "View All Professionals"}
 						</Button>
 					</Link>
 				</div>

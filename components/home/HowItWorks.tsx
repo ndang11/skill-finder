@@ -2,51 +2,47 @@
 "use client";
 
 import { MessageCircle, Search, UserPlus } from "lucide-react";
-
-const steps = [
-	{
-		icon: Search,
-		title: "Search & Discover",
-		description:
-			"Browse verified professionals by category, location, or skill. Filter by ratings and availability.",
-		color: "text-blue-600",
-		bg: "bg-blue-50",
-		ring: "ring-blue-100",
-	},
-	{
-		icon: UserPlus,
-		title: "Book & Connect",
-		description:
-			"Review profiles, check ratings, and save your favorites. Contact professionals directly via WhatsApp.",
-		color: "text-amber-600",
-		bg: "bg-amber-50",
-		ring: "ring-amber-100",
-	},
-	{
-		icon: MessageCircle,
-		title: "Get the Job Done",
-		description:
-			"Collaborate with your chosen professional, leave a review, and build lasting local connections.",
-		color: "text-emerald-600",
-		bg: "bg-emerald-50",
-		ring: "ring-emerald-100",
-	},
-];
+import { useTranslation } from "@/context/LanguageContext";
 
 export default function HowItWorks() {
+	const { t } = useTranslation();
+
+	const steps = [
+		{
+			icon: Search,
+			title: t("home.step1Title"),
+			description: t("home.step1Desc"),
+			color: "text-blue-600",
+			bg: "bg-blue-50",
+			ring: "ring-blue-100",
+		},
+		{
+			icon: UserPlus,
+			title: t("home.step2Title"),
+			description: t("home.step2Desc"),
+			color: "text-amber-600",
+			bg: "bg-amber-50",
+			ring: "ring-amber-100",
+		},
+		{
+			icon: MessageCircle,
+			title: t("home.step3Title"),
+			description: t("home.step3Desc"),
+			color: "text-emerald-600",
+			bg: "bg-emerald-50",
+			ring: "ring-emerald-100",
+		},
+	];
+
 	return (
 		<section className="py-16 lg:py-24 bg-gradient-to-b from-gray-50 to-white">
 			<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 				<div className="text-center max-w-2xl mx-auto mb-12 lg:mb-16">
 					<h2 className="text-3xl sm:text-4xl font-black text-gray-900 tracking-tight">
-						How It{" "}
-						<span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-500 to-green-600">
-							Works
-						</span>
+						{t("home.howItWorks")}
 					</h2>
 					<p className="mt-4 text-base sm:text-lg text-gray-600 leading-relaxed">
-						Getting things done is simple. Three easy steps to connect with the
-						right professional for your needs.
+						{t("home.howItWorksSubtitle")}
 					</p>
 				</div>
 

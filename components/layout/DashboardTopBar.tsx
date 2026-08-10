@@ -3,8 +3,9 @@
 
 import type { User } from "@supabase/supabase-js";
 import {
+	Bell,
 	Bookmark,
-	Globe,
+	CheckCheck,
 	HelpCircle,
 	Image as ImageIcon,
 	MapPin,
@@ -90,6 +91,143 @@ const STATIC_RESULTS: SearchResult[] = [
 		href: "/dashboard/professional/settings",
 	},
 ];
+
+// ---------------------------------------------------------------------------
+// Notification Bell — self-contained, ready to wire up to a real API later
+// ---------------------------------------------------------------------------
+const MOCK_NOTIFICATIONS = [
+	{
+		id: "1",
+		title: "New review received",
+		body: "A customer left you a 5-star review.",
+		time: "2m ago",
+		read: false,
+	},
+	{
+		id: "2",
+		title: "Post liked",
+		body: "Someone liked your recent showcase.",
+		time: "15m ago",
+		read: false,
+	},
+	{
+		id: "3",
+		title: "New comment",
+		body: "A provider replied to your comment.",
+		time: "1h ago",
+		read: true,
+	},
+];
+
+function NotificationBell() {
+	const [open, setOpen] = React.useState(false);
+	const [notifications, setNotifications] = React.useState(MOCK_NOTIFICATIONS);
+	const ref = React.useRef<HTMLDivElement>(null);
+
+	const unread = notifications.filter((n) => !n.read).length;
+
+	const markAllRead = () =>
+		setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+
+	React.useEffect(() => {
+		function onClickOutside(e: MouseEvent) {
+			if (ref.current && !ref.current.contains(e.target as Node)) {
+				setOpen(false);
+			}
+		}
+		document.addEventListener("mousedown", onClickOutside);
+		return () => document.removeEventListener("mousedown", onClickOutside);
+	}, []);
+
+	return (
+		<div ref={ref} className="relative">
+			<button
+				type="button"
+				onClick={() => setOpen((v) => !v)}
+				className="relative flex h-9 w-9 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-500 hover:border-primary-300 hover:text-primary-600 transition-all shadow-sm"
+				aria-label="Notifications"
+			>
+				<Bell className="h-4.5 w-4.5" />
+				{unread > 0 && (
+					<span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[9px] font-black text-white shadow">
+						{unread}
+					</span>
+				)}
+			</button>
+
+			{open && (
+				<div className="absolute right-0 mt-3 w-80 rounded-2xl border border-gray-200 bg-white shadow-xl shadow-gray-900/10 overflow-hidden z-50">
+					{/* Header */}
+					<div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 bg-gray-50/60">
+						<p className="text-xs font-black text-gray-800 flex items-center gap-1.5">
+							<Bell className="h-3.5 w-3.5 text-primary-600" />
+							Notifications
+							{unread > 0 && (
+								<span className="ml-1 bg-red-100 text-red-600 text-[10px] font-extrabold px-1.5 py-0.5 rounded-full">
+									{unread} new
+								</span>
+							)}
+						</p>
+						{unread > 0 && (
+							<button
+								type="button"
+								onClick={markAllRead}
+								className="flex items-center gap-1 text-[10px] font-bold text-primary-600 hover:text-primary-700 transition-colors"
+							>
+								<CheckCheck className="h-3 w-3" />
+								Mark all read
+							</button>
+						)}
+					</div>
+
+					{/* Notification list */}
+					<div className="divide-y divide-gray-100 max-h-72 overflow-y-auto">
+						{notifications.map((n) => (
+							<button
+								key={n.id}
+								type="button"
+								onClick={() =>
+									setNotifications((prev) =>
+										prev.map((x) => (x.id === n.id ? { ...x, read: true } : x)),
+									)
+								}
+								className={`w-full text-left flex items-start gap-3 px-4 py-3 transition-colors ${
+									n.read
+										? "hover:bg-gray-50"
+										: "bg-primary-50/40 hover:bg-primary-50"
+								}`}
+							>
+								<span
+									className={`mt-0.5 h-2 w-2 flex-shrink-0 rounded-full ${
+										n.read ? "bg-transparent" : "bg-primary-500"
+									}`}
+								/>
+								<div className="flex-1 min-w-0">
+									<p className="text-xs font-bold text-gray-900 truncate">
+										{n.title}
+									</p>
+									<p className="text-[11px] text-gray-500 mt-0.5 truncate">
+										{n.body}
+									</p>
+								</div>
+								<span className="flex-shrink-0 text-[10px] text-gray-400 font-medium mt-0.5">
+									{n.time}
+								</span>
+							</button>
+						))}
+					</div>
+
+					{/* Footer */}
+					<div className="border-t border-gray-100 px-4 py-2.5 bg-gray-50/40 text-center">
+						<p className="text-[10px] text-gray-400 font-medium">
+							Real-time notifications coming soon
+						</p>
+					</div>
+				</div>
+			)}
+		</div>
+	);
+}
 
 export default function DashboardTopBar() {
 	const router = useRouter();
@@ -533,26 +671,7 @@ export default function DashboardTopBar() {
 					{/* Right side: quick link to full search + Language + Profile Icon */}
 					<div className="flex items-center gap-3">
 						<LanguageSwitcher />
-						<a
-							href="/search"
-							className="hidden sm:flex items-center gap-1.5 text-xs font-semibold text-gray-500 hover:text-primary-600 transition-colors whitespace-nowrap"
-						>
-							<svg
-								className="w-4 h-4"
-								fill="none"
-								viewBox="0 0 24 24"
-								stroke="currentColor"
-								strokeWidth={2}
-								aria-hidden="true"
-							>
-								<path
-									strokeLinecap="round"
-									strokeLinejoin="round"
-									d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"
-								/>
-							</svg>
-							Browse All
-						</a>
+						<NotificationBell />
 
 						<Link
 							href={
@@ -560,7 +679,7 @@ export default function DashboardTopBar() {
 									? "/dashboard/professional/profile"
 									: "/dashboard/customer/profile"
 							}
-							className="flex items-center gap-2 rounded-full border border-gray-200 bg-white pl-1 pr-3 py-1 hover:border-primary-300 hover:shadow-sm transition-all"
+							className="flex items-center justify-center rounded-full border border-gray-200 bg-white p-0.5 hover:border-primary-300 hover:shadow-sm transition-all"
 							aria-label="Open profile"
 						>
 							{user?.user_metadata?.avatar_url ? (
@@ -580,9 +699,6 @@ export default function DashboardTopBar() {
 										"U"}
 								</span>
 							)}
-							<span className="hidden sm:block text-xs font-semibold text-gray-700 max-w-[100px] truncate">
-								{user?.user_metadata?.fullname?.split(" ")[0] || "Profile"}
-							</span>
 						</Link>
 					</div>
 				</div>

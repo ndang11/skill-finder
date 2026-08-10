@@ -6,45 +6,77 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
+import { useTranslation } from "@/context/LanguageContext";
 import { supabase } from "@/utils/supabase/client";
 
 const navItemsPerRole: Record<
 	string,
-	Array<{ href: string; label: string }>
+	Array<{ href: string; labelKey: string }>
 > = {
 	professional: [
-		{ href: "/dashboard/professional", label: "Overview" },
-		{ href: "/dashboard/professional/profile", label: "Profile" },
-		{ href: "/dashboard/professional/portfolio", label: "Portfolio" },
-		{ href: "/dashboard/professional/posts", label: "Posts" },
-		{ href: "/dashboard/professional/reviews", label: "Reviews" },
-		{ href: "/dashboard/professional/settings", label: "Settings" },
+		{ href: "/dashboard/professional", labelKey: "dashboardItems.overview" },
+		{
+			href: "/dashboard/professional/profile",
+			labelKey: "dashboardItems.profile",
+		},
+		{
+			href: "/dashboard/professional/portfolio",
+			labelKey: "dashboardItems.portfolio",
+		},
+		{ href: "/dashboard/professional/posts", labelKey: "dashboardItems.posts" },
+		{
+			href: "/dashboard/professional/reviews",
+			labelKey: "dashboardItems.reviews",
+		},
+		{
+			href: "/dashboard/professional/settings",
+			labelKey: "dashboardItems.settings",
+		},
 	],
 	customer: [
-		{ href: "/dashboard/customer", label: "Overview" },
-		{ href: "/search", label: "Find Professional" },
-		{ href: "/dashboard/customer/profile", label: "Profile" },
-		{ href: "/dashboard/customer/bookmarks", label: "Bookmarks" },
-		{ href: "/dashboard/customer/reviews", label: "My Reviews" },
-		{ href: "/dashboard/customer/settings", label: "Settings" },
+		{ href: "/dashboard/customer", labelKey: "dashboardItems.overview" },
+		{ href: "/search", labelKey: "dashboardItems.findProfessional" },
+		{ href: "/dashboard/customer/profile", labelKey: "dashboardItems.profile" },
+		{
+			href: "/dashboard/customer/bookmarks",
+			labelKey: "dashboardItems.bookmarks",
+		},
+		{
+			href: "/dashboard/customer/reviews",
+			labelKey: "dashboardItems.myReviews",
+		},
+		{
+			href: "/dashboard/customer/settings",
+			labelKey: "dashboardItems.settings",
+		},
 	],
 	admin: [
-		{ href: "/dashboard/admin", label: "Overview" },
-		{ href: "/dashboard/admin/users", label: "Users" },
-		{ href: "/dashboard/admin/professionals", label: "Professionals" },
-		{ href: "/dashboard/admin/posts", label: "Posts" },
-		{ href: "/dashboard/admin/categories", label: "Categories" },
+		{ href: "/dashboard/admin", labelKey: "dashboardItems.overview" },
+		{ href: "/dashboard/admin/users", labelKey: "dashboardItems.users" },
+		{
+			href: "/dashboard/admin/professionals",
+			labelKey: "dashboardItems.professionals",
+		},
+		{ href: "/dashboard/admin/posts", labelKey: "dashboardItems.posts" },
+		{
+			href: "/dashboard/admin/categories",
+			labelKey: "dashboardItems.categories",
+		},
 		{
 			href: "/dashboard/admin/verifications",
-			label: "Verifications",
+			labelKey: "dashboardItems.verifications",
 		},
-		{ href: "/dashboard/admin/analytics", label: "Analytics" },
+		{
+			href: "/dashboard/admin/analytics",
+			labelKey: "dashboardItems.analytics",
+		},
 	],
 };
 
 export default function DashboardSidebar() {
 	const pathname = usePathname();
 	const router = useRouter();
+	const { language, t } = useTranslation();
 	const [user, setUser] = useState<User | null>(null);
 
 	useEffect(() => {
@@ -97,27 +129,41 @@ export default function DashboardSidebar() {
 									: "text-gray-600 hover:bg-gray-50 hover:text-gray-900",
 							].join(" ")}
 						>
-							<span>{item.label}</span>
+							<span>{t(item.labelKey as any)}</span>
 						</Link>
 					))}
 				</nav>
 
 				<div className="border-t border-gray-100 p-4 space-y-3">
 					<div className="flex items-center gap-3 px-2">
-						<div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary-100 text-primary-700 font-bold text-sm">
-							{displayName.charAt(0).toUpperCase()}
-						</div>
+						{user?.user_metadata?.avatar_url ? (
+							<div className="flex h-9 w-9 flex-shrink-0 overflow-hidden rounded-full border border-gray-200 shadow-sm">
+								{/* eslint-disable-next-line @next/next/no-img-element */}
+								{/* biome-ignore lint/performance/noImgElement: dynamic user avatar */}
+								<img
+									src={user.user_metadata.avatar_url}
+									alt="Avatar"
+									className="h-full w-full object-cover"
+								/>
+							</div>
+						) : (
+							<div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary-100 text-primary-700 font-bold text-sm">
+								{displayName.charAt(0).toUpperCase()}
+							</div>
+						)}
 						<div className="min-w-0">
 							<p className="truncate text-sm font-semibold text-gray-900">
 								{displayName}
 							</p>
 							<p className="truncate text-xs text-gray-500 capitalize">
-								{role}
+								{role === "professional"
+									? t("auth.roleProfessional")
+									: t("auth.roleCustomer")}
 							</p>
 						</div>
 					</div>
 					<Button variant="outline" className="w-full" onClick={handleLogout}>
-						Log out
+						{t("nav.logout")}
 					</Button>
 				</div>
 			</div>

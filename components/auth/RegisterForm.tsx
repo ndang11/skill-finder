@@ -9,35 +9,9 @@ import * as React from "react";
 import * as Yup from "yup";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { useTranslation } from "@/context/LanguageContext";
 import { apiRequest } from "@/services/api";
 import { supabase } from "@/utils/supabase/client";
-
-const schema = Yup.object({
-	role: Yup.string()
-		.oneOf(["customer", "professional"], "Please select an account type")
-		.required("Account type is required"),
-	fullname: Yup.string()
-		.min(2, "Enter your full name")
-		.required("Full name is required"),
-	email: Yup.string()
-		.email("Invalid email address")
-		.required("Email is required"),
-	phone: Yup.string()
-		.matches(/^[0-9]{9,}$/, "Enter a valid phone number")
-		.required("Phone number is required"),
-	serviceCategory: Yup.string().when("role", {
-		is: "professional",
-		// biome-ignore lint/suspicious/noThenProperty: Yup validation schema structure uses 'then'
-		then: () => Yup.string().required("Service category is required"),
-		otherwise: () => Yup.string(),
-	}),
-	password: Yup.string()
-		.min(6, "Password must be at least 6 characters")
-		.required("Password is required"),
-	confirmPassword: Yup.string()
-		.oneOf([Yup.ref("password")], "Passwords must match")
-		.required("Please confirm your password"),
-});
 
 const EyeIcon = ({ show }: { show: boolean }) =>
 	show ? (
@@ -93,10 +67,42 @@ const SERVICE_CATEGORIES = [
 
 export const RegisterForm = () => {
 	const router = useRouter();
+	const { t } = useTranslation();
 	const [showPassword, setShowPassword] = React.useState(false);
 	const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
 	const [agreeTerms, setAgreeTerms] = React.useState(false);
 	const [serverError, setServerError] = React.useState<string | null>(null);
+
+	const registerSchema = React.useMemo(
+		() =>
+			Yup.object({
+				role: Yup.string()
+					.oneOf(["customer", "professional"], t("auth.selectRoleRequired"))
+					.required(t("auth.selectRoleRequired")),
+				fullname: Yup.string()
+					.min(2, t("auth.fullnameMin"))
+					.required(t("auth.fullnameRequired")),
+				email: Yup.string()
+					.email(t("auth.invalidEmail"))
+					.required(t("auth.emailRequired")),
+				phone: Yup.string()
+					.matches(/^[0-9]{9,}$/, t("auth.invalidPhone"))
+					.required(t("auth.phoneRequired")),
+				serviceCategory: Yup.string().when("role", {
+					is: "professional",
+					// biome-ignore lint/suspicious/noThenProperty: Yup validation schema structure uses 'then'
+					then: () => Yup.string().required(t("auth.serviceCategoryRequired")),
+					otherwise: () => Yup.string(),
+				}),
+				password: Yup.string()
+					.min(6, t("auth.passwordLength"))
+					.required(t("auth.passwordRequired")),
+				confirmPassword: Yup.string()
+					.oneOf([Yup.ref("password")], t("auth.passwordsMustMatch"))
+					.required(t("auth.confirmPasswordRequired")),
+			}),
+		[t],
+	);
 
 	const formik = useFormik({
 		initialValues: {
@@ -108,7 +114,7 @@ export const RegisterForm = () => {
 			password: "",
 			confirmPassword: "",
 		},
-		validationSchema: schema,
+		validationSchema: registerSchema,
 		onSubmit: async (values, { setSubmitting, resetForm }) => {
 			try {
 				setServerError(null);
@@ -176,7 +182,7 @@ export const RegisterForm = () => {
 								href="/login"
 								className="underline font-bold text-primary-600 hover:text-primary-700"
 							>
-								log in here
+								{t("auth.loginHere")}
 							</Link>
 							.
 						</>
@@ -186,9 +192,7 @@ export const RegisterForm = () => {
 				</p>
 			)}
 			<div className="text-center pb-2">
-				<p className="text-sm text-gray-600 font-medium">
-					How do you intend to use Skill Finder?
-				</p>
+				<p className="text-sm text-gray-600 font-medium">{t("auth.howUse")}</p>
 			</div>
 
 			<div className="grid grid-cols-2 gap-3">
@@ -211,7 +215,7 @@ export const RegisterForm = () => {
 								: "text-gray-900"
 						}`}
 					>
-						Customer
+						{t("auth.roleCustomer")}
 					</span>
 				</button>
 
@@ -234,16 +238,16 @@ export const RegisterForm = () => {
 								: "text-gray-900"
 						}`}
 					>
-						Professional
+						{t("auth.roleProfessional")}
 					</span>
 				</button>
 			</div>
 
 			<Input
-				label="Full Name"
+				label={t("auth.fullname")}
 				name="fullname"
 				type="text"
-				placeholder="Enter your first and last name"
+				placeholder={t("auth.fullnamePlaceholder")}
 				onChange={formik.handleChange}
 				onBlur={formik.handleBlur}
 				value={formik.values.fullname}
@@ -254,15 +258,15 @@ export const RegisterForm = () => {
 				<Input
 					label={
 						formik.values.role === "professional"
-							? "Phone Number"
-							: "Email Address"
+							? t("auth.phone")
+							: t("auth.email")
 					}
 					name={formik.values.role === "professional" ? "phone" : "email"}
 					type={formik.values.role === "professional" ? "tel" : "email"}
 					placeholder={
 						formik.values.role === "professional"
-							? "Enter your phone number"
-							: "Enter your email address"
+							? t("auth.phonePlaceholder")
+							: t("auth.emailPlaceholder")
 					}
 					onChange={formik.handleChange}
 					onBlur={formik.handleBlur}
@@ -285,15 +289,15 @@ export const RegisterForm = () => {
 				<Input
 					label={
 						formik.values.role === "professional"
-							? "Email Address"
-							: "Phone Number"
+							? t("auth.email")
+							: t("auth.phone")
 					}
 					name={formik.values.role === "professional" ? "email" : "phone"}
 					type={formik.values.role === "professional" ? "email" : "tel"}
 					placeholder={
 						formik.values.role === "professional"
-							? "Enter your email address"
-							: "Enter your phone number"
+							? t("auth.emailPlaceholder")
+							: t("auth.phonePlaceholder")
 					}
 					onChange={formik.handleChange}
 					onBlur={formik.handleBlur}
@@ -320,7 +324,7 @@ export const RegisterForm = () => {
 						htmlFor="serviceCategory"
 						className="text-sm font-medium text-gray-700 tracking-wide block mb-1.5"
 					>
-						Service Category
+						{t("auth.serviceCategory")}
 					</label>
 					<select
 						name="serviceCategory"
@@ -331,11 +335,11 @@ export const RegisterForm = () => {
 						className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white focus:border-primary-500 focus:ring-4 focus:ring-primary-100 focus:outline-none transition-all text-gray-900"
 					>
 						<option value="" className="text-gray-400">
-							Select your service
+							{t("auth.selectService")}
 						</option>
 						{SERVICE_CATEGORIES.map((category) => (
 							<option key={category} value={category}>
-								{category}
+								{t(`categories.${category}`)}
 							</option>
 						))}
 					</select>
@@ -348,10 +352,10 @@ export const RegisterForm = () => {
 			)}
 
 			<Input
-				label="Password"
+				label={t("auth.password")}
 				name="password"
 				type={showPassword ? "text" : "password"}
-				placeholder="Create security password"
+				placeholder={t("auth.passwordPlaceholderRegister")}
 				onChange={formik.handleChange}
 				onBlur={formik.handleBlur}
 				value={formik.values.password}
@@ -368,10 +372,10 @@ export const RegisterForm = () => {
 			/>
 
 			<Input
-				label="Confirm Password"
+				label={t("auth.confirmPassword")}
 				name="confirmPassword"
 				type={showConfirmPassword ? "text" : "password"}
-				placeholder="Repeat password"
+				placeholder={t("auth.confirmPasswordPlaceholder")}
 				onChange={formik.handleChange}
 				onBlur={formik.handleBlur}
 				value={formik.values.confirmPassword}
@@ -403,12 +407,12 @@ export const RegisterForm = () => {
 					htmlFor="terms"
 					className="text-sm text-gray-600 select-none leading-snug"
 				>
-					I agree to the{" "}
+					{t("auth.agreeTerms")}{" "}
 					<Link
 						href="/terms"
 						className="text-primary-600 font-medium hover:underline"
 					>
-						Terms & Conditions
+						{t("auth.termsConditions")}
 					</Link>
 				</label>
 			</div>
@@ -418,16 +422,16 @@ export const RegisterForm = () => {
 				disabled={formik.isSubmitting || !formik.isValid || !agreeTerms}
 				className="w-full"
 			>
-				{formik.isSubmitting ? "Creating account..." : "Sign Up"}
+				{formik.isSubmitting ? t("auth.creatingAccount") : t("auth.signUp")}
 			</Button>
 
 			<p className="text-center text-sm text-gray-500 pt-4">
-				Already have an account?{" "}
+				{t("auth.alreadyHaveAccount")}{" "}
 				<Link
 					href="/login"
 					className="text-primary-600 font-semibold hover:underline"
 				>
-					Log in here
+					{t("auth.loginHere")}
 				</Link>
 			</p>
 		</form>

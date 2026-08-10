@@ -1,15 +1,7 @@
 // components/home/Hero.tsx
 "use client";
 
-import {
-	Award,
-	Search,
-	Shield,
-	ShieldCheck,
-	Star,
-	Trophy,
-	Users,
-} from "lucide-react";
+import { Search, Shield, ShieldCheck, Star, Trophy, Users } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { useTranslation } from "@/context/LanguageContext";

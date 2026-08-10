@@ -5,7 +5,6 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import WriteReviewModal from "@/components/reviews/WriteReviewModal";
-import { Button } from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import { Input } from "@/components/ui/Input";
 import { professionalService } from "@/services/professional.service";
@@ -123,7 +122,7 @@ export default function CustomerReviewsPage() {
 			const matchesSearch =
 				!q ||
 				r.comment.toLowerCase().includes(q) ||
-				(r.receiverName && r.receiverName.toLowerCase().includes(q)) ||
+				r.receiverName?.toLowerCase().includes(q) ||
 				r.skillTitle.toLowerCase().includes(q);
 			return matchesRating && matchesSearch;
 		});
@@ -135,7 +134,7 @@ export default function CustomerReviewsPage() {
 			const q = professionalSearchQuery.toLowerCase().trim();
 			const matchesSearch =
 				!q ||
-				(p.fullName && p.fullName.toLowerCase().includes(q)) ||
+				p.fullName?.toLowerCase().includes(q) ||
 				p.category.toLowerCase().includes(q) ||
 				p.skills.some((s) => s.toLowerCase().includes(q));
 			return matchesSearch;

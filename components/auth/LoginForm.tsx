@@ -4,21 +4,13 @@
 import { useFormik } from "formik";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import * as Yup from "yup";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { useTranslation } from "@/context/LanguageContext";
 import { apiRequest } from "@/services/api";
 import { supabase } from "@/utils/supabase/client";
-
-const LoginSchema = Yup.object().shape({
-	email: Yup.string()
-		.email("Invalid email address")
-		.required("Email is required to access your account"),
-	password: Yup.string()
-		.min(6, "Password must be at least 6 characters")
-		.required("Password is required"),
-});
 
 const EyeIcon = ({ show }: { show: boolean }) =>
 	show ? (
@@ -59,8 +51,22 @@ const EyeIcon = ({ show }: { show: boolean }) =>
 
 export const LoginForm = () => {
 	const router = useRouter();
+	const { t } = useTranslation();
 	const [showPassword, setShowPassword] = useState(false);
 	const [serverError, setServerError] = useState<string | null>(null);
+
+	const LoginSchema = useMemo(
+		() =>
+			Yup.object().shape({
+				email: Yup.string()
+					.email(t("auth.invalidEmail"))
+					.required(t("auth.emailRequired")),
+				password: Yup.string()
+					.min(6, t("auth.passwordLength"))
+					.required(t("auth.passwordRequired")),
+			}),
+		[t],
+	);
 
 	const formik = useFormik({
 		initialValues: {
@@ -99,7 +105,7 @@ export const LoginForm = () => {
 				}
 			} catch (error) {
 				setServerError(
-					error instanceof Error ? error.message : "Invalid login credentials",
+					error instanceof Error ? error.message : t("auth.invalidCredentials"),
 				);
 			} finally {
 				setSubmitting(false);
@@ -116,10 +122,10 @@ export const LoginForm = () => {
 			)}
 
 			<Input
-				label="Email Address"
+				label={t("auth.emailAddress")}
 				name="email"
 				type="email"
-				placeholder="Enter your email address"
+				placeholder={t("auth.emailPlaceholder")}
 				onChange={formik.handleChange}
 				onBlur={formik.handleBlur}
 				value={formik.values.email}
@@ -127,10 +133,10 @@ export const LoginForm = () => {
 			/>
 
 			<Input
-				label="Password"
+				label={t("auth.password")}
 				name="password"
 				type={showPassword ? "text" : "password"}
-				placeholder="••••••••"
+				placeholder={t("auth.passwordPlaceholder")}
 				onChange={formik.handleChange}
 				onBlur={formik.handleBlur}
 				value={formik.values.password}
@@ -152,18 +158,18 @@ export const LoginForm = () => {
 						type="checkbox"
 						className="rounded border-gray-300 text-primary-500 focus:ring-primary-500 h-4 w-4"
 					/>
-					Remember me
+					{t("auth.rememberMe")}
 				</label>
 				<Link
 					href="/forgot-password"
-					className="font-semibold text-primary-600 hover:text-primary-700"
+					className="font-semibold text-primary-600 hover:text-primary-700 transition-colors"
 				>
-					Forgot Password?
+					{t("auth.forgotPassword")}
 				</Link>
 			</div>
 
 			<Button type="submit" disabled={formik.isSubmitting}>
-				{formik.isSubmitting ? "Signing in..." : "Sign In"}
+				{formik.isSubmitting ? t("auth.signingIn") : t("auth.signIn")}
 			</Button>
 
 			<div className="relative py-2">
@@ -171,7 +177,9 @@ export const LoginForm = () => {
 					<div className="w-full border-t border-gray-200"></div>
 				</div>
 				<div className="relative flex justify-center text-sm">
-					<span className="px-2 bg-white text-gray-500">Or continue with</span>
+					<span className="px-2 bg-white text-gray-500">
+						{t("auth.orContinueWith")}
+					</span>
 				</div>
 			</div>
 
@@ -204,7 +212,7 @@ export const LoginForm = () => {
 						fill="#EA4335"
 					/>
 				</svg>
-				Sign in with Google
+				{t("auth.signInWithGoogle")}
 			</Button>
 		</form>
 	);

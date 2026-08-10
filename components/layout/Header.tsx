@@ -1,7 +1,8 @@
 // components/layout/Header.tsx
 "use client";
 
-import { LogOut, Menu, Search, type User, X } from "lucide-react";
+import type { User } from "@supabase/supabase-js";
+import { LogOut, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
@@ -150,7 +151,7 @@ export default function Header() {
 							) : (
 								<>
 									<Link href="/login" onClick={() => setMobileMenuOpen(false)}>
-										<Button variant="ghost" className="w-full">
+										<Button variant="outline" className="w-full">
 											Log in
 										</Button>
 									</Link>

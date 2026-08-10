@@ -1,9 +1,13 @@
 // components/layout/Footer.tsx
+"use client";
 
 import { Heart, Mail, MapPin, Phone } from "lucide-react";
 import Link from "next/link";
+import { useTranslation } from "@/context/LanguageContext";
 
 export default function Footer() {
+	const { t } = useTranslation();
+
 	return (
 		<footer className="bg-gray-900 text-gray-300">
 			<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
@@ -19,32 +23,40 @@ export default function Footer() {
 							</span>
 						</Link>
 						<p className="text-sm text-gray-400 leading-relaxed max-w-xs">
-							The #1 artisan directory in Cameroon. Connect with trusted
-							professionals for every job, big or small.
+							{t("home.footerText")}
 						</p>
 					</div>
 
 					{/* Quick Links */}
 					<div>
 						<h3 className="text-sm font-bold text-white uppercase tracking-wider mb-4">
-							Quick Links
+							{t("common.appName")}
 						</h3>
 						<ul className="space-y-2.5">
-							{[
-								"Find Professionals",
-								"Categories",
-								"How It Works",
-								"Pricing",
-							].map((item) => (
-								<li key={item}>
-									<Link
-										href="/search"
-										className="text-sm text-gray-400 hover:text-primary-400 transition-colors"
-									>
-										{item}
-									</Link>
-								</li>
-							))}
+							<li>
+								<Link
+									href="/search"
+									className="text-sm text-gray-400 hover:text-primary-400 transition-colors"
+								>
+									{t("nav.findPros")}
+								</Link>
+							</li>
+							<li>
+								<Link
+									href="/categories"
+									className="text-sm text-gray-400 hover:text-primary-400 transition-colors"
+								>
+									{t("categories.title")}
+								</Link>
+							</li>
+							<li>
+								<Link
+									href="/#how-it-works"
+									className="text-sm text-gray-400 hover:text-primary-400 transition-colors"
+								>
+									{t("home.howItWorks")}
+								</Link>
+							</li>
 						</ul>
 					</div>
 
