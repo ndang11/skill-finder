@@ -13,9 +13,16 @@
 		"check": "biome check ."
 	},
 	"dependencies": {
+		"@supabase/supabase-js": "^2.110.0",
+		"clsx": "^2.1.1",
+		"formik": "^2.4.9",
+		"lucide-react": "^1.27.0",
 		"next": "^16.2.9",
+		"next-intl": "^4.13.5",
 		"react": "^19.2.7",
-		"react-dom": "^19.2.7"
+		"react-dom": "^19.2.7",
+		"tailwind-merge": "^3.6.0",
+		"yup": "^1.7.1"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.5.1",

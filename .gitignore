@@ -28,5 +28,6 @@ dist-ssr
 out/
 
 # Environments
+.env
 .env*.local
 
