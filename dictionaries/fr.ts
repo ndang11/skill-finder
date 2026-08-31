@@ -43,6 +43,8 @@ export const fr: Dictionary = {
 		userCount: "+1 200 Utilisateurs",
 		topRated: "Mieux Noté",
 		secure: "100% Sécurisé",
+		getStarted: "Commencer",
+		dashboard: "Tableau de Bord",
 	},
 	categoriesPage: {
 		badge: "Classification Nationale des Métiers du Cameroun",
@@ -132,6 +134,17 @@ export const fr: Dictionary = {
 			"Connecter les meilleurs talents du Cameroun avec des clients vérifiés.",
 		dontHaveAccount: "Vous n'avez pas de compte ?",
 		registerHere: "Inscrivez-vous ici",
+		step1Title: "Choisir le Type de Compte",
+		step1Subtitle:
+			"Recrutez-vous des services ou proposez-vous vos compétences ?",
+		step2Title: "Profil de Base",
+		step2Subtitle:
+			"Fournissez vos coordonnées pour aider les autres à vous contacter",
+		step3Title: "Sécuriser le Compte",
+		step3Subtitle:
+			"Créez un mot de passe et acceptez les conditions pour terminer",
+		nextStep: "Étape Suivante",
+		prevStep: "Retourner",
 		emailAddress: "Adresse e-mail",
 		password: "Mot de passe",
 		passwordPlaceholder: "••••••••",

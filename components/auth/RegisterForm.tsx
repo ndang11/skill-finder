@@ -2,7 +2,15 @@
 "use client";
 
 import { useFormik } from "formik";
-import { User, Wrench } from "lucide-react";
+import {
+	ArrowLeft,
+	ArrowRight,
+	Check,
+	Shield,
+	User,
+	UserCheck,
+	Wrench,
+} from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import * as React from "react";
@@ -67,7 +75,8 @@ const SERVICE_CATEGORIES = [
 
 export const RegisterForm = () => {
 	const router = useRouter();
-	const { t } = useTranslation();
+	const { t, language } = useTranslation();
+	const [currentStep, setCurrentStep] = React.useState(1);
 	const [showPassword, setShowPassword] = React.useState(false);
 	const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
 	const [agreeTerms, setAgreeTerms] = React.useState(false);
@@ -171,269 +180,439 @@ export const RegisterForm = () => {
 		},
 	});
 
-	return (
-		<form onSubmit={formik.handleSubmit} className="space-y-5">
-			{serverError && (
-				<p className="text-xs text-center font-semibold text-red-500 animate-in fade-in-50">
-					{serverError.includes("already registered") ? (
-						<>
-							User already registered. Please{" "}
-							<Link
-								href="/login"
-								className="underline font-bold text-primary-600 hover:text-primary-700"
+	const validateStep2 = async () => {
+		const step2Fields = ["fullname", "email", "phone"];
+		if (formik.values.role === "professional") {
+			step2Fields.push("serviceCategory");
+		}
+
+		// Mark fields as touched
+		const touched = { ...formik.touched };
+		for (const field of step2Fields) {
+			touched[field as keyof typeof touched] = true;
+		}
+		formik.setTouched(touched);
+
+		// Trigger validation
+		const errors = await formik.validateForm();
+
+		// Check if any of these fields have errors
+		const hasErrors = step2Fields.some(
+			(field) => !!errors[field as keyof typeof errors],
+		);
+		return !hasErrors;
+	};
+
+	const getStepHeader = () => {
+		switch (currentStep) {
+			case 1:
+				return {
+					title: t("auth.step1Title"),
+					subtitle: t("auth.step1Subtitle"),
+				};
+			case 2:
+				return {
+					title: t("auth.step2Title"),
+					subtitle: t("auth.step2Subtitle"),
+				};
+			case 3:
+				return {
+					title: t("auth.step3Title"),
+					subtitle: t("auth.step3Subtitle"),
+				};
+			default:
+				return {
+					title: t("auth.createAccount"),
+					subtitle: t("auth.getStarted"),
+				};
+		}
+	};
+
+	const renderProgressBar = () => {
+		const steps = [
+			{
+				id: 1,
+				label: `${t("auth.roleCustomer")}/${t("auth.roleProfessional")}`,
+				icon: User,
+			},
+			{ id: 2, label: t("auth.step2Title"), icon: UserCheck },
+			{ id: 3, label: t("auth.step3Title"), icon: Shield },
+		];
+
+		return (
+			<div className="mb-8">
+				<div className="flex items-center justify-between relative">
+					{/* Progress lines */}
+					<div className="absolute top-1/2 left-0 right-0 h-0.5 bg-gray-100 -translate-y-1/2 z-0" />
+					<div
+						className="absolute top-1/2 left-0 h-0.5 bg-primary-500 -translate-y-1/2 transition-all duration-300 z-0"
+						style={{ width: `${((currentStep - 1) / 2) * 100}%` }}
+					/>
+
+					{steps.map((step) => {
+						const StepIcon = step.icon;
+						const isCompleted = currentStep > step.id;
+						const isActive = currentStep === step.id;
+
+						return (
+							<div
+								key={step.id}
+								className="flex flex-col items-center relative z-10"
 							>
-								{t("auth.loginHere")}
-							</Link>
-							.
-						</>
-					) : (
-						serverError
-					)}
+								<div
+									className={`flex h-10 w-10 items-center justify-center rounded-full border-2 transition-all duration-300 ${
+										isCompleted
+											? "border-primary-500 bg-primary-500 text-white"
+											: isActive
+												? "border-primary-500 bg-white text-primary-600 shadow-md shadow-primary-100"
+												: "border-gray-200 bg-white text-gray-400"
+									}`}
+								>
+									{isCompleted ? (
+										<Check className="h-5 w-5" />
+									) : (
+										<StepIcon className="h-5 w-5" />
+									)}
+								</div>
+								<span
+									className={`mt-2 text-xs font-semibold ${
+										isActive ? "text-primary-600 font-bold" : "text-gray-400"
+									}`}
+								>
+									{step.id}
+								</span>
+							</div>
+						);
+					})}
+				</div>
+			</div>
+		);
+	};
+
+	const { title, subtitle } = getStepHeader();
+
+	return (
+		<div className="space-y-6">
+			{/* Dynamic Form Header */}
+			<div className="text-center mb-6">
+				<h2 className="text-2xl font-black text-gray-900 tracking-tight mb-1.5">
+					{title}
+				</h2>
+				<p className="text-sm text-gray-500 font-medium leading-relaxed">
+					{subtitle}
 				</p>
-			)}
-			<div className="text-center pb-2">
-				<p className="text-sm text-gray-600 font-medium">{t("auth.howUse")}</p>
 			</div>
 
-			<div className="grid grid-cols-2 gap-3">
-				<button
-					type="button"
-					onClick={() => formik.setFieldValue("role", "customer")}
-					className={`p-4 rounded-xl border text-center transition-all flex flex-col items-center justify-center ${
-						formik.values.role === "customer"
-							? "border-primary-500 bg-primary-50 ring-2 ring-primary-100"
-							: "border-gray-200 bg-white hover:bg-gray-50"
-					}`}
-				>
-					<User
-						className={`h-6 w-6 mb-1.5 ${formik.values.role === "customer" ? "text-primary-600" : "text-gray-400"}`}
-					/>
-					<span
-						className={`text-sm font-bold block ${
-							formik.values.role === "customer"
-								? "text-primary-900"
-								: "text-gray-900"
-						}`}
-					>
-						{t("auth.roleCustomer")}
-					</span>
-				</button>
+			{/* Progress Bar */}
+			{renderProgressBar()}
 
-				<button
-					type="button"
-					onClick={() => formik.setFieldValue("role", "professional")}
-					className={`p-4 rounded-xl border text-center transition-all flex flex-col items-center justify-center ${
-						formik.values.role === "professional"
-							? "border-primary-500 bg-primary-50 ring-2 ring-primary-100"
-							: "border-gray-200 bg-white hover:bg-gray-50"
-					}`}
-				>
-					<Wrench
-						className={`h-6 w-6 mb-1.5 ${formik.values.role === "professional" ? "text-primary-600" : "text-gray-400"}`}
-					/>
-					<span
-						className={`text-sm font-bold block ${
-							formik.values.role === "professional"
-								? "text-primary-900"
-								: "text-gray-900"
-						}`}
-					>
-						{t("auth.roleProfessional")}
-					</span>
-				</button>
-			</div>
+			<form onSubmit={formik.handleSubmit} className="space-y-5">
+				{serverError && (
+					<p className="text-xs text-center font-semibold text-red-500 animate-in fade-in-50">
+						{serverError.includes("already registered") ? (
+							<>
+								User already registered. Please{" "}
+								<Link
+									href="/login"
+									className="underline font-bold text-primary-600 hover:text-primary-700"
+								>
+									{t("auth.loginHere")}
+								</Link>
+								.
+							</>
+						) : (
+							serverError
+						)}
+					</p>
+				)}
 
-			<Input
-				label={t("auth.fullname")}
-				name="fullname"
-				type="text"
-				placeholder={t("auth.fullnamePlaceholder")}
-				onChange={formik.handleChange}
-				onBlur={formik.handleBlur}
-				value={formik.values.fullname}
-				error={formik.touched.fullname ? formik.errors.fullname : undefined}
-			/>
+				{/* Step 1: Role selection */}
+				{currentStep === 1 && (
+					<div className="space-y-4">
+						<div className="flex flex-col gap-4">
+							<button
+								type="button"
+								onClick={() => formik.setFieldValue("role", "customer")}
+								className={`group p-5 rounded-2xl border text-left transition-all duration-300 flex items-start gap-4 cursor-pointer ${
+									formik.values.role === "customer"
+										? "border-primary-500 bg-primary-50/40 ring-4 ring-primary-100/50"
+										: "border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50/50"
+								}`}
+							>
+								<div
+									className={`flex-shrink-0 flex h-12 w-12 items-center justify-center rounded-xl transition-all ${
+										formik.values.role === "customer"
+											? "bg-primary-500 text-white"
+											: "bg-gray-100 text-gray-500 group-hover:bg-gray-200"
+									}`}
+								>
+									<User className="h-6 w-6" />
+								</div>
+								<div className="flex-1">
+									<div className="flex items-center justify-between">
+										<span className="text-base font-bold text-gray-900">
+											{t("auth.roleCustomer")}
+										</span>
+										{formik.values.role === "customer" && (
+											<div className="flex h-5 w-5 items-center justify-center rounded-full bg-primary-500 text-white">
+												<Check className="h-3 w-3 stroke-[3]" />
+											</div>
+										)}
+									</div>
+									<p className="text-sm text-gray-500 mt-1 leading-relaxed">
+										{language === "fr"
+											? "Je cherche à embaucher des artisans et des professionnels qualifiés."
+											: "I want to find and hire trusted local professionals for jobs."}
+									</p>
+								</div>
+							</button>
 
-			<div className="grid grid-cols-1 gap-4">
-				<Input
-					label={
-						formik.values.role === "professional"
-							? t("auth.phone")
-							: t("auth.email")
-					}
-					name={formik.values.role === "professional" ? "phone" : "email"}
-					type={formik.values.role === "professional" ? "tel" : "email"}
-					placeholder={
-						formik.values.role === "professional"
-							? t("auth.phonePlaceholder")
-							: t("auth.emailPlaceholder")
-					}
-					onChange={formik.handleChange}
-					onBlur={formik.handleBlur}
-					value={
-						formik.values[
-							formik.values.role === "professional" ? "phone" : "email"
-						]
-					}
-					error={
-						formik.touched[
-							formik.values.role === "professional" ? "phone" : "email"
-						]
-							? formik.errors[
-									formik.values.role === "professional" ? "phone" : "email"
-								]
-							: undefined
-					}
-				/>
+							<button
+								type="button"
+								onClick={() => formik.setFieldValue("role", "professional")}
+								className={`group p-5 rounded-2xl border text-left transition-all duration-300 flex items-start gap-4 cursor-pointer ${
+									formik.values.role === "professional"
+										? "border-primary-500 bg-primary-50/40 ring-4 ring-primary-100/50"
+										: "border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50/50"
+								}`}
+							>
+								<div
+									className={`flex-shrink-0 flex h-12 w-12 items-center justify-center rounded-xl transition-all ${
+										formik.values.role === "professional"
+											? "bg-primary-500 text-white"
+											: "bg-gray-100 text-gray-500 group-hover:bg-gray-200"
+									}`}
+								>
+									<Wrench className="h-6 w-6" />
+								</div>
+								<div className="flex-1">
+									<div className="flex items-center justify-between">
+										<span className="text-base font-bold text-gray-900">
+											{t("auth.roleProfessional")}
+										</span>
+										{formik.values.role === "professional" && (
+											<div className="flex h-5 w-5 items-center justify-center rounded-full bg-primary-500 text-white">
+												<Check className="h-3 w-3 stroke-[3]" />
+											</div>
+										)}
+									</div>
+									<p className="text-sm text-gray-500 mt-1 leading-relaxed">
+										{language === "fr"
+											? "Je suis un professionnel et je souhaite proposer mes services."
+											: "I want to offer my services, build a profile, and find clients."}
+									</p>
+								</div>
+							</button>
+						</div>
+					</div>
+				)}
 
-				<Input
-					label={
-						formik.values.role === "professional"
-							? t("auth.email")
-							: t("auth.phone")
-					}
-					name={formik.values.role === "professional" ? "email" : "phone"}
-					type={formik.values.role === "professional" ? "email" : "tel"}
-					placeholder={
-						formik.values.role === "professional"
-							? t("auth.emailPlaceholder")
-							: t("auth.phonePlaceholder")
-					}
-					onChange={formik.handleChange}
-					onBlur={formik.handleBlur}
-					value={
-						formik.values[
-							formik.values.role === "professional" ? "email" : "phone"
-						]
-					}
-					error={
-						formik.touched[
-							formik.values.role === "professional" ? "email" : "phone"
-						]
-							? formik.errors[
-									formik.values.role === "professional" ? "email" : "phone"
-								]
-							: undefined
-					}
-				/>
-			</div>
+				{/* Step 2: Details */}
+				{currentStep === 2 && (
+					<div className="space-y-4 animate-in fade-in-50 duration-300">
+						<Input
+							label={t("auth.fullname")}
+							name="fullname"
+							type="text"
+							placeholder={t("auth.fullnamePlaceholder")}
+							onChange={formik.handleChange}
+							onBlur={formik.handleBlur}
+							value={formik.values.fullname}
+							error={
+								formik.touched.fullname ? formik.errors.fullname : undefined
+							}
+						/>
 
-			{formik.values.role === "professional" && (
-				<div>
-					<label
-						htmlFor="serviceCategory"
-						className="text-sm font-medium text-gray-700 tracking-wide block mb-1.5"
-					>
-						{t("auth.serviceCategory")}
-					</label>
-					<select
-						name="serviceCategory"
-						id="serviceCategory"
-						value={formik.values.serviceCategory}
-						onChange={formik.handleChange}
-						onBlur={formik.handleBlur}
-						className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white focus:border-primary-500 focus:ring-4 focus:ring-primary-100 focus:outline-none transition-all text-gray-900"
-					>
-						<option value="" className="text-gray-400">
-							{t("auth.selectService")}
-						</option>
-						{SERVICE_CATEGORIES.map((category) => (
-							<option key={category} value={category}>
-								{t(`categories.${category}`)}
-							</option>
-						))}
-					</select>
-					{formik.touched.serviceCategory && formik.errors.serviceCategory && (
-						<p className="text-xs text-red-500 mt-1">
-							{formik.errors.serviceCategory as string}
-						</p>
+						<Input
+							label={t("auth.email")}
+							name="email"
+							type="email"
+							placeholder={t("auth.emailPlaceholder")}
+							onChange={formik.handleChange}
+							onBlur={formik.handleBlur}
+							value={formik.values.email}
+							error={formik.touched.email ? formik.errors.email : undefined}
+						/>
+
+						<Input
+							label={t("auth.phone")}
+							name="phone"
+							type="tel"
+							placeholder={t("auth.phonePlaceholder")}
+							onChange={formik.handleChange}
+							onBlur={formik.handleBlur}
+							value={formik.values.phone}
+							error={formik.touched.phone ? formik.errors.phone : undefined}
+						/>
+
+						{formik.values.role === "professional" && (
+							<div>
+								<label
+									htmlFor="serviceCategory"
+									className="text-sm font-medium text-gray-700 tracking-wide block mb-1.5"
+								>
+									{t("auth.serviceCategory")}
+								</label>
+								<select
+									name="serviceCategory"
+									id="serviceCategory"
+									value={formik.values.serviceCategory}
+									onChange={formik.handleChange}
+									onBlur={formik.handleBlur}
+									className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white focus:border-primary-500 focus:ring-4 focus:ring-primary-100 focus:outline-none transition-all text-gray-900 cursor-pointer"
+								>
+									<option value="" className="text-gray-400">
+										{t("auth.selectService")}
+									</option>
+									{SERVICE_CATEGORIES.map((category) => (
+										<option key={category} value={category}>
+											{t(`categories.${category}`)}
+										</option>
+									))}
+								</select>
+								{formik.touched.serviceCategory &&
+									formik.errors.serviceCategory && (
+										<p className="text-xs text-red-500 mt-1">
+											{formik.errors.serviceCategory as string}
+										</p>
+									)}
+							</div>
+						)}
+					</div>
+				)}
+
+				{/* Step 3: Password & Terms */}
+				{currentStep === 3 && (
+					<div className="space-y-4 animate-in fade-in-50 duration-300">
+						<Input
+							label={t("auth.password")}
+							name="password"
+							type={showPassword ? "text" : "password"}
+							placeholder={t("auth.passwordPlaceholderRegister")}
+							onChange={formik.handleChange}
+							onBlur={formik.handleBlur}
+							value={formik.values.password}
+							error={
+								formik.touched.password ? formik.errors.password : undefined
+							}
+							endAdornment={
+								<button
+									type="button"
+									onClick={() => setShowPassword(!showPassword)}
+									className="focus:outline-none cursor-pointer"
+								>
+									<EyeIcon show={showPassword} />
+								</button>
+							}
+						/>
+
+						<Input
+							label={t("auth.confirmPassword")}
+							name="confirmPassword"
+							type={showConfirmPassword ? "text" : "password"}
+							placeholder={t("auth.confirmPasswordPlaceholder")}
+							onChange={formik.handleChange}
+							onBlur={formik.handleBlur}
+							value={formik.values.confirmPassword}
+							error={
+								formik.touched.confirmPassword
+									? formik.errors.confirmPassword
+									: undefined
+							}
+							endAdornment={
+								<button
+									type="button"
+									onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+									className="focus:outline-none cursor-pointer"
+								>
+									<EyeIcon show={showConfirmPassword} />
+								</button>
+							}
+						/>
+
+						<div className="flex items-start gap-2.5 pt-2">
+							<input
+								type="checkbox"
+								id="terms"
+								checked={agreeTerms}
+								onChange={(e) => setAgreeTerms(e.target.checked)}
+								className="mt-1 h-4 w-4 rounded border-gray-300 text-primary-500 focus:ring-primary-500 cursor-pointer"
+							/>
+							<label
+								htmlFor="terms"
+								className="text-sm text-gray-600 select-none leading-snug cursor-pointer"
+							>
+								{t("auth.agreeTerms")}{" "}
+								<Link
+									href="/terms"
+									className="text-primary-600 font-semibold hover:underline"
+								>
+									{t("auth.termsConditions")}
+								</Link>
+							</label>
+						</div>
+					</div>
+				)}
+
+				{/* Step Navigation Actions */}
+				<div className="flex items-center gap-3 pt-6 border-t border-gray-100 mt-6">
+					{currentStep > 1 && (
+						<Button
+							type="button"
+							variant="outline"
+							onClick={() => setCurrentStep((prev) => prev - 1)}
+							className="flex items-center justify-center gap-1.5 w-1/3 border-gray-200 text-gray-700 hover:bg-gray-50 h-11 cursor-pointer"
+						>
+							<ArrowLeft className="h-4 w-4" />
+							{t("auth.prevStep")}
+						</Button>
+					)}
+
+					{currentStep < 3 ? (
+						<Button
+							type="button"
+							onClick={async () => {
+								if (currentStep === 1) {
+									setCurrentStep(2);
+								} else if (currentStep === 2) {
+									const isValid = await validateStep2();
+									if (isValid) {
+										setCurrentStep(3);
+									}
+								}
+							}}
+							className={`flex items-center justify-center gap-1.5 h-11 cursor-pointer ${
+								currentStep === 1 ? "w-full" : "w-2/3"
+							}`}
+						>
+							{t("auth.nextStep")}
+							<ArrowRight className="h-4 w-4" />
+						</Button>
+					) : (
+						<Button
+							type="submit"
+							disabled={formik.isSubmitting || !formik.isValid || !agreeTerms}
+							className="flex-1 flex items-center justify-center gap-1.5 h-11 cursor-pointer"
+						>
+							{formik.isSubmitting
+								? t("auth.creatingAccount")
+								: t("auth.signUp")}
+						</Button>
 					)}
 				</div>
-			)}
+			</form>
 
-			<Input
-				label={t("auth.password")}
-				name="password"
-				type={showPassword ? "text" : "password"}
-				placeholder={t("auth.passwordPlaceholderRegister")}
-				onChange={formik.handleChange}
-				onBlur={formik.handleBlur}
-				value={formik.values.password}
-				error={formik.touched.password ? formik.errors.password : undefined}
-				endAdornment={
-					<button
-						type="button"
-						onClick={() => setShowPassword(!showPassword)}
-						className="focus:outline-none"
-					>
-						<EyeIcon show={showPassword} />
-					</button>
-				}
-			/>
-
-			<Input
-				label={t("auth.confirmPassword")}
-				name="confirmPassword"
-				type={showConfirmPassword ? "text" : "password"}
-				placeholder={t("auth.confirmPasswordPlaceholder")}
-				onChange={formik.handleChange}
-				onBlur={formik.handleBlur}
-				value={formik.values.confirmPassword}
-				error={
-					formik.touched.confirmPassword
-						? formik.errors.confirmPassword
-						: undefined
-				}
-				endAdornment={
-					<button
-						type="button"
-						onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-						className="focus:outline-none"
-					>
-						<EyeIcon show={showConfirmPassword} />
-					</button>
-				}
-			/>
-
-			<div className="flex items-start gap-2 pt-2">
-				<input
-					type="checkbox"
-					id="terms"
-					checked={agreeTerms}
-					onChange={(e) => setAgreeTerms(e.target.checked)}
-					className="mt-0.5 h-4 w-4 rounded border-gray-300 text-primary-500 focus:ring-primary-500"
-				/>
-				<label
-					htmlFor="terms"
-					className="text-sm text-gray-600 select-none leading-snug"
-				>
-					{t("auth.agreeTerms")}{" "}
+			{currentStep === 1 && (
+				<p className="text-center text-sm text-gray-500 pt-2">
+					{t("auth.alreadyHaveAccount")}{" "}
 					<Link
-						href="/terms"
-						className="text-primary-600 font-medium hover:underline"
+						href="/login"
+						className="text-primary-600 font-semibold hover:underline"
 					>
-						{t("auth.termsConditions")}
+						{t("auth.loginHere")}
 					</Link>
-				</label>
-			</div>
-
-			<Button
-				type="submit"
-				disabled={formik.isSubmitting || !formik.isValid || !agreeTerms}
-				className="w-full"
-			>
-				{formik.isSubmitting ? t("auth.creatingAccount") : t("auth.signUp")}
-			</Button>
-
-			<p className="text-center text-sm text-gray-500 pt-4">
-				{t("auth.alreadyHaveAccount")}{" "}
-				<Link
-					href="/login"
-					className="text-primary-600 font-semibold hover:underline"
-				>
-					{t("auth.loginHere")}
-				</Link>
-			</p>
-		</form>
+				</p>
+			)}
+		</div>
 	);
 };

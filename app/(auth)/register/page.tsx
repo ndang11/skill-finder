@@ -6,10 +6,8 @@ import { RegisterForm } from "@/components/auth/RegisterForm";
 import { useTranslation } from "@/context/LanguageContext";
 
 export default function RegisterPage() {
-	const { t } = useTranslation();
-
 	return (
-		<div className="w-full max-w-md my-8">
+		<div className="w-full max-w-lg my-8">
 			{/* Logo for mobile / small screens */}
 			<div className="flex justify-center lg:hidden mb-8">
 				<Link href="/" className="flex items-center gap-2.5">
@@ -23,14 +21,6 @@ export default function RegisterPage() {
 			</div>
 
 			<div className="bg-white p-8 sm:p-10 rounded-3xl shadow-2xl shadow-emerald-950/10 border border-gray-100">
-				<div className="text-center mb-8">
-					<h2 className="text-3xl font-extrabold text-gray-900 tracking-tight mb-2">
-						{t("auth.createAccount")}
-					</h2>
-					<p className="text-sm text-gray-500 font-medium">
-						{t("auth.getStarted")}
-					</p>
-				</div>
 				<RegisterForm />
 			</div>
 		</div>

@@ -12,12 +12,11 @@ export default function CallToAction() {
 	return (
 		<section className="py-16 lg:py-24 bg-white">
 			<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-				<div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary-500 via-green-500 to-primary-600 px-8 py-16 sm:px-12 sm:py-20 lg:px-16 lg:py-24 text-center">
+				<div className="relative overflow-hidden rounded-3xl bg-slate-950 border border-slate-850 px-8 py-16 sm:px-12 sm:py-20 lg:px-16 lg:py-24 text-center text-white">
 					{/* Background decorations */}
-					<div className="absolute inset-0 -z-10 overflow-hidden">
-						<div className="absolute top-0 left-1/4 h-60 w-60 rounded-full bg-white/10 blur-[80px]" />
-						<div className="absolute bottom-0 right-1/4 h-60 w-60 rounded-full bg-white/10 blur-[80px]" />
-					</div>
+					<div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:32px_32px] [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]" />
+					<div className="absolute top-0 left-1/4 h-60 w-60 rounded-full bg-primary-500/10 blur-[100px] -z-10" />
+					<div className="absolute bottom-0 right-1/4 h-60 w-60 rounded-full bg-green-500/10 blur-[100px] -z-10" />
 
 					<div className="relative z-10 max-w-2xl mx-auto space-y-6">
 						<div className="flex items-center justify-center gap-2 text-white/90 text-sm font-semibold">
@@ -29,7 +28,7 @@ export default function CallToAction() {
 							{t("home.ctaTitle")}
 						</h2>
 
-						<p className="text-base sm:text-lg text-primary-50 leading-relaxed max-w-xl mx-auto">
+						<p className="text-base sm:text-lg text-gray-300 leading-relaxed max-w-xl mx-auto">
 							{t("home.ctaSubtitle")}
 						</p>
 

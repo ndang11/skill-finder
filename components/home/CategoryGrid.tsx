@@ -100,7 +100,7 @@ export default function CategoryGrid() {
 							<Link
 								key={skill.id}
 								href={`/search?category=${encodeURIComponent(skill.name)}`}
-								className="group relative overflow-hidden rounded-2xl border border-gray-200 bg-white p-5 sm:p-6 shadow-sm transition-all hover:shadow-xl hover:border-gray-300 hover:-translate-y-1"
+								className="group relative overflow-hidden rounded-2xl border border-gray-100 bg-white p-5 sm:p-6 shadow-xs transition-all duration-300 hover:shadow-md hover:border-primary-300 hover:-translate-y-1"
 							>
 								<div className="flex flex-col items-center text-center gap-4">
 									<div

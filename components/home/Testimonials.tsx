@@ -51,7 +51,7 @@ export default function Testimonials() {
 					{testimonials.map((testimonial) => (
 						<div
 							key={testimonial.name}
-							className="rounded-2xl border border-gray-200 bg-white p-6 sm:p-8 shadow-sm transition-all hover:shadow-lg hover:border-gray-300 hover:-translate-y-1"
+							className="rounded-2xl border border-gray-100 bg-white p-6 sm:p-8 shadow-xs transition-all duration-300 hover:shadow-md hover:border-primary-200 hover:-translate-y-1"
 						>
 							{/* Stars */}
 							<div className="flex items-center gap-0.5 mb-4">
